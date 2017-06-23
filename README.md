@@ -27,11 +27,11 @@ Kodi uses LCDproc to write on a LCD. This is a different approach from the one
 described in [RaspDAC-Display](https://github.com/dhrone/Raspdac-Display) and
 that's the reason why I decided to write my own how-to.
 
-RaspDAC running OSMC playing music:<br>
-![RaspDAC running OSMC playing Inca Roads](assets/RaspDAC running OSMC playing music.jpg)
-
-RaspDAC running OSMC in energy saving mode:<br>
-![RaspDAC running OSMC in screensaver mode](assets/RaspDAC running OSMC in screensaver mode.jpg)
+#### RaspDAC running OSMC playing music
+![RaspDAC running OSMC playing Inca Roads](assets/RaspDAC-running-OSMC-playing-music.jpg)
+<br/>
+#### RaspDAC running OSMC in energy saving mode
+![RaspDAC running OSMC in screensaver mode](assets/RaspDAC-running-OSMC-in-screensaver-mode.jpg)
 
 Note: in no way am I affiliated to Audiophonics. I wanted to share my experience
 in the hope that it would be helpfull. If you want to try this, proceed with
