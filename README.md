@@ -40,8 +40,8 @@ links at the end of this document (coming soon).
 ## Operating System
 ### Prepare the SD Card
 The download page for OSMC is [here](https://osmc.tv/download/).
-As of June 2017, there is no specific image for Rapsberry Pi 3, so use the one
-for Raspberry Pi 2.
+As of June 2017, there is no specific image for the Rapsberry Pi 3, so use the one
+for the Raspberry Pi 2.
 
 #### Option 1: installer
 OSMC proposes a dedicated program targetting the OS from which you will install
@@ -54,20 +54,18 @@ Continue to the [Configuration section below](#configure_osmc).
 
 #### Option 2: manual installation
 I assume you use a Unix-like operating system.
-1. Download the compressed image
-Click the **Disk images** button and scroll down to the latest release for
-Raspeberry Pi 2/3.
+1. Download the compressed image: click the **Disk images** button and scroll down
+to the latest release for Raspeberry Pi 2/3.
 
-2. Extract the image
+2. Extract the image:
 Cd to the directory where you downloaded the compressed image and issue the
 following command:
 ```
     $ gunzip OSMC_TGT_rbp2_20170615.img.gz
 ```
 
-3. Prepare the SDCard
-Insert the SDCard in your installation host and figure out which device it is
-associated to.
+3. Prepare the SDCard: insert the SDCard in your installation host and figure
+out which device it is associated to.
 If the OS auto-mounted the partitions, unmount them. E.g.:
 ```
     $ unmount /dev/sdb1
@@ -80,9 +78,9 @@ following command:
     $ sudo dd bs=4M if=OSMC_TGT_rbp2_20170615.img of=/dev/sdb
 ```
 
-4. Finalize the installation
-Eject the SDCard for the installation host and insert it into the Rapsberry Pi.
-Connect an ethernet link and a keyboard and start the Pi.
+4. Finalize the installation: eject the SDCard for the installation host and
+insert it into the Rapsberry Pi. Connect an ethernet link and a keyboard and
+start the Pi.
 
 OSMC will format and install the filesystem. When it's done, it will reboot.
 Follow the instructions. Choose a name for your media center. When prompted for
