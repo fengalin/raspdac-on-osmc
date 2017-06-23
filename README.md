@@ -260,7 +260,19 @@ The LCD display should show "XBMC running..." and the time and date.
 
 # Tips
 ## Modify how things are displayed
-*Coming soon...*
+Kodi stores a definition of the screens to display depending on the context in
+the following file:
+```
+$ nano ~/.kodi/userdata/LCD.xml
+```
+
+If you want the display to scroll long lines slower or faster, you can adjust
+the **FrameInterval** in the LCDd configuration:
+```
+$ sudo nano /usr/local/etc/LCDd.conf
+```
+Of course there are other parameters like the strings **Hello** and **GoodBye**
+which are displayed when the server starts and stops.
 
 ## Use a mobile device interface to control the media center
 Kodi has a builtin web server that allows manging some of its features from
