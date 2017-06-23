@@ -82,7 +82,7 @@ following command:
 $ sudo dd bs=4M if=OSMC_TGT_rbp2_20170615.img of=/dev/sdb
 ```
 
-4. Finalize the installation: eject the SDCard for the installation host and
+4. Finalize the installation: eject the SDCard from the installation host and
 insert it into the Rapsberry Pi. Connect an ethernet link and a keyboard and
 start the Pi.
 
