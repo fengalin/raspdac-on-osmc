@@ -274,12 +274,12 @@ These are the steps to configure the web server:
 
 Check that the web server is runing: open a browser and connect to this URL:
 http://192.168.0.15:8080/ (replace '192.168.0.15' with the IP of your RaspDAC).
-You should be prompted with a user and password. Enter the one you defined above.
+You should be prompted with a user and password. Enter the ones you defined above.
 
 If the connection succeeded, try installing Kore and configure it with the same
 settings you used above.
 
-Kore hots a copy of the metadata from your media center. You can browser your
+Kore hosts a copy of the metadata from your media center. You can browse your
 collection and control playlists, etc.
 
 
