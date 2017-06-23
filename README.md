@@ -37,13 +37,12 @@ This project is dedicated to the software installation of the RaspDAC on OSMC.
 If you're looking for instructions on how to assemble the hardware, refer to the
 links at the end of this document (coming soon).
 
-## Operating System
-### Prepare the SD Card
+## Prepare the SD Card
 The download page for OSMC is [here](https://osmc.tv/download/).
 As of June 2017, there is no specific image for the Rapsberry Pi 3, so use the one
 for the Raspberry Pi 2.
 
-#### Option 1: installer
+### Option 1: installer
 OSMC proposes a dedicated program targetting the OS from which you will install
 OSMC. If you wish to follow this path, click on your installation host OS and
 follow the instructions. I never used the installer.
@@ -52,7 +51,7 @@ When you're done, insert the SDCard into the Rapsberry Pi and start the Pi.
 Continue to the [Configuration section below](#configure_osmc).
 
 
-#### Option 2: manual installation
+### Option 2: manual installation
 I assume you use a Unix-like operating system.
 1. Download the compressed image: click the **Disk images** button and scroll down
 to the latest release for Raspeberry Pi 2/3.
@@ -87,13 +86,13 @@ Follow the instructions. Choose a name for your media center. When prompted for
 SSH, accept the default (Enabled).
 
 
-### <a name='configure_osmc'></a>Configure OSMC for the RaspDAC
+## <a name='configure_osmc'></a>Configure OSMC for the RaspDAC
 You should now have a runing OSMC with the main menu and time of the day.
 
 **Note**: don't worry about the blinking power button, we'll get to that in a
 [dedicated section](#power_unit).
 
-#### Update OSMC
+### Update OSMC
 Before doing anything, it is a good idea to check for updates.
 1. From the main menu, select **My OSMC**
 2. Move up to the cloud **Updates**
@@ -102,7 +101,7 @@ Before doing anything, it is a good idea to check for updates.
 5. Wait until the scan is done. Reboot if needed, otherwise you can press the
 backspace key to return to the main menu.
 
-#### Configure the overlay for the RaspDAC
+### Configure the overlay for the RaspDAC
 1. From the main menu, select **My OSMC**
 2. Move left to **Pi Config**
 3. Move down to **Hardware Support**
@@ -115,7 +114,7 @@ backspace key to return to the main menu.
 If your RaspDAC is connected to an amplifier, you should get notification sounds
 from Kodi when you move through the menus.
 
-#### Configure the installation host to connect to your RaspDAC
+### Configure the installation host to connect to your RaspDAC
 First you need to figure out which IP address the Raspberry Pi. There are multiple
 ways of doing this depending on your network infrastructure. You may try
 something like this:
@@ -150,7 +149,7 @@ After you log out, just issue the following command to connect to the RaspDAC:
 $ ssh osmc@192.168.0.15
 ```
 
-#### Download this project
+### Download this project
 For the rest of the installation, we will use files from various git projects.
 On the RaspDAC, in an ssh session (see above), install git:
 ```
@@ -164,7 +163,7 @@ $ cd ~/Projects
 $ git clone https://github.com/fengalin/raspdac-on-osmc
 ```
 
-#### <a name='power_unit'></a>Handle the Power Management Unit
+### <a name='power_unit'></a>Handle the Power Management Unit
 The project contains scripts and a systemd unit to handle the power management
 unit. This allows stopping the button from blinking when OSMC is started and handling
 soft reboot or shutdowns as well as clean shutdown when the button is pressed.
@@ -192,7 +191,7 @@ or from Kodi's user interface. E.g. to shutdown from the command line:
 $ sudo systemctl poweroff
 ```
 
-#### <a name='lcd_display'></a>Configure the LCD
+### <a name='lcd_display'></a>Configure the LCD
 Kodi uses the [XBMC LCDproc add-on](http://kodi.wiki/view/Add-on:XBMC_LCDproc)
 to show informations on a LCD display. Obviously, the add-on relies on a
 properly configured [LCDproc](https://github.com/lcdproc/lcdproc) server.
@@ -256,7 +255,7 @@ Install the Kodi add-on to use LCDproc:
 The LCD display should show "XBMC running..." and the time and date.
 
 
-#### Configure an Infrared Remote Control
+### Configure an Infrared Remote Control
 *Coming soon...*
 
 # Tips
