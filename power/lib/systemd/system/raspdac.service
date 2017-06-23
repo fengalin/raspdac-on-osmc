@@ -1,0 +1,20 @@
+[Unit]
+Description=Raspdac Sartup Service
+After=dbus.socket
+
+[Service]
+ExecStart=/usr/bin/python -u /usr/local/sbin/raspdac-startup.py
+#ExecStart=/bin/echo "raspdac fake start"
+
+WorkingDirectory=/usr/local/sbin/
+ExecReload=/usr/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=always
+RestartSec=10
+StartLimitInterval=30
+StartLimitBurst=20
+
+ExecStop=/usr/bin/python -u /usr/local/sbin/raspdac-shutdown.py
+
+[Install]
+WantedBy=multi-user.target

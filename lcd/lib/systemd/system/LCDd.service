@@ -1,0 +1,16 @@
+[Unit]
+SourcePath=/usr/local/sbin/LCDd
+Description=LCD daemon
+Before=shutdown.target
+After=remote-fs.target systemd-journald-dev-log.socket
+Conflicts=shutdown.target
+
+[Service]
+Type=forking
+Restart=no
+TimeoutSec=5min
+KillMode=process
+ExecStart=/usr/local/sbin/LCDd
+
+[Install]
+WantedBy=multi-user.target
