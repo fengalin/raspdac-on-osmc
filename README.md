@@ -18,7 +18,7 @@ Volumio and RuneAudio. These instructions helped me a lot understand how the
 RaspDAC could be supported.
 
 Of course I wanted to play my audio collection, but I though: it would be great
-if the device could also play videos too. So, I searched for an active distribution
+if the device could play videos too. So, I searched for an active distribution
 that supported the Raspeberry Pi with a special on multimedia, hence OSMC. If
 the audio capabilities of Kodi were not that good, I would install mpd and find
 a way to switch between Kodi and mpd when necessary.
@@ -58,24 +58,24 @@ I assume you use a Unix-like operating system.
 to the latest release for Raspeberry Pi 2/3.
 
 2. Extract the image:
-Cd to the directory where you downloaded the compressed image and issue the
+cd to the directory where you downloaded the compressed image and issue the
 following command:
 ```
-    $ gunzip OSMC_TGT_rbp2_20170615.img.gz
+$ gunzip OSMC_TGT_rbp2_20170615.img.gz
 ```
 
 3. Prepare the SDCard: insert the SDCard in your installation host and figure
 out which device it is associated to.
 If the OS auto-mounted the partitions, unmount them. E.g.:
 ```
-    $ unmount /dev/sdb1
-    $ unmount /dev/sdb2
+$ unmount /dev/sdb1
+$ unmount /dev/sdb2
 ```
 Copy the image to the SDCard. **Warning**: this will erase everything on the
 SDCard. Make sure the device matches the SDCard before proceeding with the
 following command:
 ```
-    $ sudo dd bs=4M if=OSMC_TGT_rbp2_20170615.img of=/dev/sdb
+$ sudo dd bs=4M if=OSMC_TGT_rbp2_20170615.img of=/dev/sdb
 ```
 
 4. Finalize the installation: eject the SDCard for the installation host and
@@ -89,6 +89,7 @@ SSH, accept the default (Enabled).
 
 ### <a name='configure_osmc'></a>Configure OSMC for the RaspDAC
 You should now have a runing OSMC with the main menu and time of the day.
+
 **Note**: don't worry about the blinking power button, we'll get to that in a
 [dedicated section](#power_unit).
 
@@ -119,7 +120,7 @@ First you need to figure out which IP address the Raspberry Pi. There are multip
 ways of doing this depending on your network infrastructure. You may try
 something like this:
 ```
-    $ arp -a
+$ arp -a
 ```
 In the rest of this section, I will use the IP address 192.168.0.15.
 
@@ -127,40 +128,40 @@ In the rest of this section, I will use the IP address 192.168.0.15.
 
 Get the ssh id from the RaspDAC (enter 'osmc' when prompted for the password):
 ```
-    $ ssh-copy-id osmc@192.168.0.15
+$ ssh-copy-id osmc@192.168.0.15
 ```
 Log in:
 ```
-    $ ssh osmc@192.168.0.15
-    $ uname -a
+$ ssh osmc@192.168.0.15
+$ uname -a
 ```
 You should read someting like this:
 ```
-    Linux raspdac 4.9.29-5-osmc #1 SMP PREEMPT Tue Jun 6 18:23:42 UTC 2017 armv7l GNU/Linux
+Linux raspdac 4.9.29-5-osmc #1 SMP PREEMPT Tue Jun 6 18:23:42 UTC 2017 armv7l GNU/Linux
 ```
 
 For security reasons, you should change the password:
 ```
-    $ sudo passwd
+$ sudo passwd
 ```
 
 After you log out, just issue the following command to connect to the RaspDAC:
 ```
-    $ ssh osmc@192.168.0.15
+$ ssh osmc@192.168.0.15
 ```
 
 #### Download this project
-For the rest of the installation, we will use files from divers git projects.
+For the rest of the installation, we will use files from various git projects.
 On the RaspDAC, in an ssh session (see above), install git:
 ```
-    $ sudo apt-get install git-core
+$ sudo apt-get install git-core
 ```
 
 Clone this project:
 ```
-    $ mkdir ~/Projects
-    $ cd ~/Projects
-    $ git clone https://github.com/fengalin/raspdac-on-osmc
+$ mkdir ~/Projects
+$ cd ~/Projects
+$ git clone https://github.com/fengalin/raspdac-on-osmc
 ```
 
 #### <a name='power_unit'></a>Handle the Power Management Unit
@@ -171,24 +172,24 @@ soft reboot or shutdowns as well as clean shutdown when the button is pressed.
 The scripts rely on the python RPi.GPIO module which can be installed using pip
 (we will also need gcc):
 ```
-    $ sudo apt-get install gcc python-dev python-pip
-    $ sudo pip install rpi.gpio
+$ sudo apt-get install gcc python-dev python-pip
+$ sudo pip install rpi.gpio
 ```
 
 Install the scripts and the systemd unit:
 ```
-    $ sudo cp -r ~/Projects/raspdac-on-osmc/power/* /usr/local/
+$ sudo cp -r ~/Projects/raspdac-on-osmc/power/* /usr/local/
 ```
 Register and start the service:
 ```
-    $ sudo systemctl enable raspdac
-    $ sudo systemctl start raspdac
+$ sudo systemctl enable raspdac
+$ sudo systemctl start raspdac
 ```
 After a few seconds, the power button should stop blinking. You can now press it
 to cleanly shutdown the RaspDAC or manage the power from the command line
 or from Kodi's user interface. E.g. to shutdown from the command line:
 ```
-    $ sudo systemctl poweroff
+$ sudo systemctl poweroff
 ```
 
 #### <a name='lcd_display'></a>Configure the LCD
@@ -201,35 +202,35 @@ a newer version (0.5.9) than the one provided by OSMC (0.5.7-2 as of today).
 
 LCDproc generation requires automake:
 ```
-    $ sudo apt-get install automake make
+$ sudo apt-get install automake make
 ```
 
 Clone LCDproc:
 ```
-    $ cd ~/Projects
-    $ git clone https://github.com/lcdproc/lcdproc
+$ cd ~/Projects
+$ git clone https://github.com/lcdproc/lcdproc
 ```
 
 Generate LCDproc with support for HD44780 only and install it:
 ```
-    $ cd ~/Projects/lcdproc
-    $ sh ./autogen.sh
-    $ ./configure --enable-drivers=hd44780 --disable-libusb --disable-libusb-1-0 --disable-libftdi --disable-libX11 --disable-libhid --disable-libpng --disable-freetype --disable-ethlcd
-    $ make
-    $ sudo make install
+$ cd ~/Projects/lcdproc
+$ sh ./autogen.sh
+$ ./configure --enable-drivers=hd44780 --disable-libusb --disable-libusb-1-0 --disable-libftdi --disable-libX11 --disable-libhid --disable-libpng --disable-freetype --disable-ethlcd
+$ make
+$ sudo make install
 ```
 
 I stripped the configuration and adapted it to use the LCD via the GPIO.
 I also wrote a systemd unit in order to start the daemon automatically.
 Install the scripts and the systemd unit:
 ```
-    $ sudo cp -r ~/Projects/raspdac-on-osmc/lcd/* /usr/local/
+$ sudo cp -r ~/Projects/raspdac-on-osmc/lcd/* /usr/local/
 ```
 **Important**: the default configuration is configured for the Sabre V3 version.
 If you use a V2, proceed as follow (otherwise you can skip to [register the
 service](#lcd_service)):
 ```
-    $ sudo nano /usr/local/etc/LCDd.conf
+$ sudo nano /usr/local/etc/LCDd.conf
 ```
 replace the following line:
 ```
@@ -242,8 +243,8 @@ pin_D7=15
 
 <a name='lcd_service'></a>Register and start the service:
 ```
-    $ sudo systemctl enable LCDd
-    $ sudo systemctl start LCDd
+$ sudo systemctl enable LCDd
+$ sudo systemctl start LCDd
 ```
 You should see a welcome message on the LCD display.
 
