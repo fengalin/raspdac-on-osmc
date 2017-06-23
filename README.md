@@ -256,7 +256,7 @@ Install the Kodi add-on to use LCDproc:
 The LCD display should show "XBMC running..." and the time and date.
 
 
-#### Configure an Infrared remote
+#### Configure an Infrared Remote Control
 *Coming soon...*
 
 # Tips
@@ -264,7 +264,25 @@ The LCD display should show "XBMC running..." and the time and date.
 *Coming soon...*
 
 ## Use a mobile device interface to control the media center
-*Coming soon...*
+Kodi has a builtin web server that allows manging some of its features from
+a browser or a dedicated mobile device application: Kore.
+
+These are the steps to configure the web server:
+1. From Kodi's main menu, move to **Settings** -> **Services** ->
+**Control**
+2. Enter a **user name** and **password**
+3. Allow **remote control**...
+
+Check that the web server is runing: open a browser and connect to this URL:
+http://192.168.0.15:8080/ (replace '192.168.0.15' with the IP of your RaspDAC).
+You should be prompted with a user and password. Enter the one you defined above.
+
+If the connection succeeded, try installing Kore and configure it with the same
+settings you used above.
+
+Kore hots a copy of the metadata from your media center. You can browser your
+collection and control playlists, etc.
+
 
 # Links
 *Coming soon...*
