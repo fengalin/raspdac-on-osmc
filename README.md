@@ -1,4 +1,4 @@
-# Description
+# RaspDAC on OSMC
 **RaspDAC on OSMC** is an how-to and a set of scripts to help people get their
 Audiophonics' RaspDAC up and running with the [Open Source Media Center](https://osmc.tv/)
 operating system.
@@ -31,22 +31,36 @@ The Sabre V3 versions of the RaspDAC are designed to host an **IR remote control
 receiver**. See [this section](#ir_receiver) for how-to install and configure
 [lirc](http://www.lirc.org/) and use it to control Kodi.
 
-#### RaspDAC running OSMC playing music
+## Table of contents
+- [Software installation](#soft_install)
+  * [Prepare the SD Card](#prepare_sdcard)
+  * [Configure OSMC for the Sabre DAC](#configure_osmc)
+  * [Handle the Power Management Unit](#power_unit)
+  * [Configure the LCD](#lcd_display)
+  * [Configure an Infrared Remote Control](#ir_receiver)
+- [Tips](#tips)
+  * [Modify how things are displayed](#conf_display)
+  * [Use a mobile device interface to control the media center](#conf_web_server)
+- [Links](#links)
+  * [Resources used for this project](#resources)
+  * [RaspDAC hardware installation](#hardware_links)
+
+## RaspDAC running OSMC playing music
 ![RaspDAC running OSMC playing Inca Roads](assets/RaspDAC-running-OSMC-playing-music.jpg)
 <br/>
-#### RaspDAC running OSMC in energy saving mode
+## RaspDAC running OSMC in energy saving mode
 ![RaspDAC running OSMC in screensaver mode](assets/RaspDAC-running-OSMC-in-screensaver-mode.jpg)
 
 **Note:** in no way am I affiliated to Audiophonics. I wanted to share my experience
 in the hope that it would be helpfull. If you want to try this, proceed with
 caution and at your own risk.
 
-# Software installation
+# <a name='soft_install'></a>Software installation
 This project is dedicated to the software installation of the RaspDAC on OSMC.
 If you're looking for instructions on how to assemble the hardware, refer to [the
 links](#hardware_links) at the end of this document.
 
-## Prepare the SD Card
+## <a name='prepare_sdcard'></a>Prepare the SD Card
 The download page for OSMC is [here](https://osmc.tv/download/).
 As of June 2017, there is no specific image for the Rapsberry Pi 3, so use the one
 for the Raspberry Pi 2.
@@ -95,7 +109,7 @@ Follow the instructions. Choose a name for your media center. When prompted for
 SSH, accept the default (Enabled).
 
 
-## <a name='configure_osmc'></a>Configure OSMC for the RaspDAC
+## <a name='configure_osmc'></a>Configure OSMC for the Sabre DAC
 You should now have a runing OSMC with the main menu and time of the day.
 
 **Note**: don't worry about the blinking power button, we'll get to that in a
@@ -110,7 +124,7 @@ Before doing anything, it is a good idea to check for updates.
 5. Wait until the scan is done. Reboot if needed, otherwise you can press the
 backspace key to return to the main menu.
 
-### Configure the overlay for the RaspDAC
+### Configure the overlay for the Sabre DAC
 1. From the main menu, select **My OSMC**
 2. Move left to **Pi Config**
 3. Move down to **Hardware Support**
@@ -172,7 +186,7 @@ $ cd ~/Projects
 $ git clone https://github.com/fengalin/raspdac-on-osmc
 ```
 
-### <a name='power_unit'></a>Handle the Power Management Unit
+## <a name='power_unit'></a>Handle the Power Management Unit
 The project contains scripts and a systemd unit to handle the power management
 subsystem. This allows stopping the button from blinking when OSMC is started and handling
 soft reboot or shutdowns as well as clean shutdown when the button is pressed.
@@ -200,7 +214,7 @@ or from Kodi's user interface. E.g. to shutdown from the command line:
 $ sudo systemctl poweroff
 ```
 
-### <a name='lcd_display'></a>Configure the LCD
+## <a name='lcd_display'></a>Configure the LCD
 Kodi uses the [XBMC LCDproc add-on](http://kodi.wiki/view/Add-on:XBMC_LCDproc)
 to show informations on a LCD display. Obviously, the add-on relies on a
 properly configured [LCDproc](https://github.com/lcdproc/lcdproc) server.
@@ -264,7 +278,7 @@ Install the Kodi add-on to use LCDproc:
 The LCD display should show "XBMC running..." and the time and date.
 
 
-### <a name='ir_receiver'></a>Configure an Infrared Remote Control
+## <a name='ir_receiver'></a>Configure an Infrared Remote Control
 The Sabre V3 features 3 pins for an IR receiver. The case of the RaspDAC has a slot
 between the power button and the LCD to receive the module. The shape and size
 suggests it was designed for the
@@ -273,7 +287,7 @@ I couldn't find this exact model locally, so I went with a
 [TSOP 4838](http://www.vishay.com/docs/82459/tsop48.pdf). I had to file down the
 hole a bit from the inside for the 4838 to fit properly.
 
-#### Configure OSMC
+### Configure OSMC
 On my device, the IR receiver data pin is connected to GPIO 26. As of today, OSMC
 doesn't allow defining a GPIO pin higher than 25 for an IR receiver.
 I submitted a [pull request](https://github.com/osmc/osmc/pull/377) for this.
@@ -325,7 +339,7 @@ Select the parameters:
 
 Restart the Rapsberry Pi for the changes to take effect.
 
-#### Configure your remote control
+### Configure your remote control
 If your remote control works out of the box, I guess your are lucky. Otherwise,
 let's try to configure it. [Linux Infrared Remote Control](http://www.lirc.org/)
 is a subsystem and a set of tools to handle remote controls on Linux.
@@ -348,7 +362,7 @@ Check [this database](http://lirc-remotes.sourceforge.net/remotes-table.html) fo
 your remote. If you can find it, download the matching lircd.conf file and go
 to [the following section](#ir_keys)
 
-##### Generate a lircd conf
+#### Generate a lircd conf
 If you can't find your remote in the database, you'll have to generate the
 configuration file.
 
@@ -372,7 +386,7 @@ these were the lines that solved the issue:
   min_repeat      2
 ```
 
-##### <a name='ir_keys'></a>Assign names to keys to control Kodi
+#### <a name='ir_keys'></a>Assign names to keys to control Kodi
 In order to ease the intagration with Kodi, it is a good idea to choose key
 names that will produce the expected result out of the box.
 
@@ -400,8 +414,8 @@ $ sudo systemctl restart mediacenter
 Use the remote to navigate in Kodi's UI. If it doesn't work, I'm afraid, you'll
 have to dig a little more into [LIRC's documentation](http://www.lirc.org/html/index.html).
 
-# Tips
-## Modify how things are displayed
+# <a name='tips'></a>Tips
+## <a name='conf_display'></a>Modify how things are displayed
 Kodi stores a definition of the screens to display depending on the context in
 the following file:
 ```
@@ -416,7 +430,7 @@ $ sudo nano /usr/local/etc/LCDd.conf
 Of course there are other parameters like the strings **Hello** and **GoodBye**
 which are displayed when the server starts and stops.
 
-## Use a mobile device interface to control the media center
+## <a name='conf_web_server'></a>Use a mobile device interface to control the media center
 Kodi has a builtin web server that allows manging some of its features from
 a browser or a dedicated mobile device application: Kore.
 
@@ -437,8 +451,8 @@ Kore hosts a copy of the metadata from your media center. You can browse your
 collection and control playlists, etc.
 
 
-# Links
-## Resources used for this project
+# <a name='links'></a>Links
+## <a name='resources'></a>Resources used for this project
 ### Scripts for the RaspDAC on audio oriented distributions
 [RaspDAC-Display](https://github.com/dhrone/Raspdac-Display) was the main source
 for this project.
