@@ -120,9 +120,9 @@ If your RaspDAC is connected to an amplifier, you should get notification sounds
 from Kodi when you move through the menus.
 
 ### Configure the installation host to connect to your RaspDAC
-First you need to figure out which IP address the Raspberry Pi. There are multiple
-ways of doing this depending on your network infrastructure. You may try
-something like this:
+First you need to figure out which IP address is used by the Raspberry Pi. There
+are multiple ways of doing this depending on your network infrastructure.
+You may try something like this:
 ```
 $ arp -a
 ```
@@ -170,7 +170,7 @@ $ git clone https://github.com/fengalin/raspdac-on-osmc
 
 ### <a name='power_unit'></a>Handle the Power Management Unit
 The project contains scripts and a systemd unit to handle the power management
-unit. This allows stopping the button from blinking when OSMC is started and handling
+subsystem. This allows stopping the button from blinking when OSMC is started and handling
 soft reboot or shutdowns as well as clean shutdown when the button is pressed.
 
 The scripts rely on the python RPi.GPIO module which can be installed using pip
@@ -301,4 +301,26 @@ collection and control playlists, etc.
 
 
 # Links
+## Resources used for this project
+### Scripts for the RaspDAC on audio oriented distributions
+[RaspDAC-Display](https://github.com/dhrone/Raspdac-Display) was the main source
+for this project.
+
+### Handling Raspberry Pi GPIO
+I choosed to use the [RPi.GIO module](https://sourceforge.net/p/raspberry-gpio-python/wiki/Examples/)
+as it was flexible, yet easy to use and it supported passively listening to GPIO.
+
+### Distinguish between reboot and power off
+The [shutdown script](power/sbin/raspdac-shutdown.py) uses the strategy described
+[here](https://stackoverflow.com/questions/25166085/how-can-a-systemd-controlled-service-distinguish-between-shutdown-and-reboot) to determine
+if the running shutdown operation is a reboot or a power off.
+
+In order to implement it in pure python, I used the [DBUS interface for
+systemd](https://www.freedesktop.org/wiki/Software/systemd/dbus/).
+
+### HD44780 LCD using LCDproc
+[This how-to](http://www.rototron.info/lcdproc-tutorial-for-raspberry-pi/) showed
+me the way. However, the project is now hosted on [github](https://github.com/lcdproc/lcdproc).
+
+## RaspDAC hardware installation
 *Coming soon...*
