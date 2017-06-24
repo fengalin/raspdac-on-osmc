@@ -23,12 +23,12 @@ that supported the Raspeberry Pi with a special on multimedia, hence OSMC. If
 the audio capabilities of Kodi were not that good, I would install mpd and find
 a way to switch between Kodi and mpd when necessary.
 
-Kodi uses LCDproc to write on a LCD. This is a different approach from the one
+Kodi uses LCDproc to write on a **LCD**. This is a different approach from the one
 described in [RaspDAC-Display](https://github.com/dhrone/Raspdac-Display) and
 that's the reason why I decided to write my own how-to.
 
-The Sabre V3 versions of the RaspDAC are designed to host an IR remote control
-receiver. See [this section](#ir_receiver) for how-to install and configure
+The Sabre V3 versions of the RaspDAC are designed to host an **IR remote control
+receiver**. See [this section](#ir_receiver) for how-to install and configure
 [lirc](http://www.lirc.org/) and use it to control Kodi.
 
 #### RaspDAC running OSMC playing music
