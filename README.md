@@ -27,20 +27,24 @@ Kodi uses LCDproc to write on a LCD. This is a different approach from the one
 described in [RaspDAC-Display](https://github.com/dhrone/Raspdac-Display) and
 that's the reason why I decided to write my own how-to.
 
+The Sabre V3 versions of the RaspDAC are designed to host an IR remote control
+receiver. See [this section](#ir_receiver) for how-to install and configure
+[lirc](http://www.lirc.org/) and use it to control Kodi.
+
 #### RaspDAC running OSMC playing music
 ![RaspDAC running OSMC playing Inca Roads](assets/RaspDAC-running-OSMC-playing-music.jpg)
 <br/>
 #### RaspDAC running OSMC in energy saving mode
 ![RaspDAC running OSMC in screensaver mode](assets/RaspDAC-running-OSMC-in-screensaver-mode.jpg)
 
-Note: in no way am I affiliated to Audiophonics. I wanted to share my experience
+**Note:** in no way am I affiliated to Audiophonics. I wanted to share my experience
 in the hope that it would be helpfull. If you want to try this, proceed with
 caution and at your own risk.
 
 # Software installation
 This project is dedicated to the software installation of the RaspDAC on OSMC.
-If you're looking for instructions on how to assemble the hardware, refer to the
-links at the end of this document (coming soon).
+If you're looking for instructions on how to assemble the hardware, refer to [the
+links](#hardware_links) at the end of this document.
 
 ## Prepare the SD Card
 The download page for OSMC is [here](https://osmc.tv/download/).
@@ -260,8 +264,133 @@ Install the Kodi add-on to use LCDproc:
 The LCD display should show "XBMC running..." and the time and date.
 
 
-### Configure an Infrared Remote Control
-*Coming soon...*
+### <a name='ir_receiver'></a>Configure an Infrared Remote Control
+The Sabre V3 features 3 pins for an IR receiver. The case of the RaspDAC has a slot
+between the power button and the LCD to receive the module. The shape and size
+suggests it was designed for the
+[TSOP 38238](https://www.vishay.com/docs/82491/tsop382.pdf) form factor.
+I couldn't find this exact model locally, so I went with a
+[TSOP 4838](http://www.vishay.com/docs/82459/tsop48.pdf). I had to file down the
+hole a bit from the inside for the 4838 to fit properly.
+
+#### Configure OSMC
+On my device, the IR receiver data pin is connected to GPIO 26. As of today, OSMC
+doesn't allow defining a GPIO pin higher than 25 for an IR receiver.
+I submitted a [pull request](https://github.com/osmc/osmc/pull/377) for this.
+
+For the moment, you can modify your existing installation:
+Stop Kodi:
+```
+$ sudo systemctl stop mediacenter
+```
+
+Open the file which defines the limits for the IR receiver's GPIO:
+```
+$ nano /usr/share/kodi/addons/script.module.osmcsetting.pi/resources/settings.xml
+```
+and change the following lines:
+```
+                <setting default="17" id="gpio_out_pin" label="gpio_out_pin" option="int" range="1,1,25" type="slider" visible="eq(-1,tr$
+                <setting default="18" id="gpio_in_pin"  label="gpio_in_pin"  option="int" range="1,1,25" type="slider" visible="eq(-2,tr$
+```
+to (update the ranges):
+```
+                <setting default="17" id="gpio_out_pin" label="gpio_out_pin" option="int" range="1,1,27" type="slider" visible="eq(-1,tr$
+                <setting default="18" id="gpio_in_pin"  label="gpio_in_pin"  option="int" range="1,1,27" type="slider" visible="eq(-2,tr$
+```
+
+Restart Kodi:
+```
+$ sudo systemctl start mediacenter
+```
+
+Select the parameters:
+1. From Kodi's main menu, go to **My OSMC** -> **Pi Config** -> **Hardware Support**
+2. Activate **Enable LIRC GPIO support**
+3. You need these values: **gpio_out_pin**: 10, **gpio_in_pin**: 26,
+**gpio_in_pull**: down.
+
+**Note**: OSMC keeps resetting **gpio_in_pin** to 18 when you enter the **Hardware Support**
+settings, even if you didn't make any modifications. I am investigating this
+issue. For the moment, rememnber to always set it to 26 and save the changes
+before you exit.
+
+Restart the Rapsberry Pi for the changes to take effect.
+
+#### Configure your remote control
+If your remote control works out of the box, I guess your are lucky. Otherwise,
+let's try to configure it. [Linux Infrared Remote Control](http://www.lirc.org/)
+is a subsystem and a set of tools to handle remote controls on Linux.
+
+Check if the Raspberry Pi receives an IR signal.
+1. Stop the LIRC server:
+```
+$ sudo systemctl stop eventlircd
+```
+
+2. Dump the raw device:
+```
+$ cat /dev/lirc0
+```
+
+Now, press a few keys on the remote control. If you see garbage, it is a good sign.
+If the command doesn't print anything, you might have an issue with your IR receiver.
+
+Check [this database](http://lirc-remotes.sourceforge.net/remotes-table.html) for
+your remote. If you can find it, download the matching lircd.conf file and go
+to [the following section](#ir_keys)
+
+##### Generate a lircd conf
+If you can't find your remote in the database, you'll have to generate the
+configuration file.
+
+First, get the list of the valid names for keys with the following command:
+```
+$ irrecord -l
+```
+
+Then, use this command to generate a configuration file and follow the instructions:
+```
+$ irrecord -d /dev/lirc0 /home/osmc/your_lircd.conf
+```
+
+You will probably need to start over before getting it right. Check the next
+section for usefull keys. Using this method, I had a bouncing effect when pressing
+the keys. From what I read, sorting this issue out depends a lot on the remote control
+itself. I ended up finding my remote control in the database. As an example,
+these were the lines that solved the issue:
+```
+  min_code_repeat 1
+  min_repeat      2
+```
+
+##### <a name='ir_keys'></a>Assign names to keys to control Kodi
+In order to ease the intagration with Kodi, it is a good idea to choose key
+names that will produce the expected result out of the box.
+
+Here are the ones I used and which allow controlling kodi to a large extent:
+- KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN
+- KEY_OK, KEY_BACK, KEY_HOME
+- KEY_CLOSE, KEY_POWER
+- KEY_MENU, KEY_INFO
+- KEY_MUTE, KEY_VOLUMEDOWN, KEY_VOLUMEUP
+- KEY_PREVIOUS, KEY_NEXT, KEY_STOP, KEY_PLAYPAUSE, KEY_FASTFORWARD, KEY_REWIND
+
+Edit your_lircd.conf file to use these names. Then set it as the default configuration:
+```
+$ sudo rm /etc/lirc/lircd.conf
+$ sudo cp your_lircd.conf /etc/lirc/lircd.conf
+```
+(or use a symbolic link if you prefer)
+
+Then restart, LIRC and Kodi:
+```
+$ sudo systemctl restart eventlircd
+$ sudo systemctl restart mediacenter
+```
+
+Use the remote to navigate in Kodi's UI. If it doesn't work, I'm afraid, you'll
+have to dig a little more into [LIRC's documentation](http://www.lirc.org/html/index.html).
 
 # Tips
 ## Modify how things are displayed
@@ -322,5 +451,7 @@ systemd](https://www.freedesktop.org/wiki/Software/systemd/dbus/).
 [This how-to](http://www.rototron.info/lcdproc-tutorial-for-raspberry-pi/) showed
 me the way. However, the project is now hosted on [github](https://github.com/lcdproc/lcdproc).
 
-## RaspDAC hardware installation
-*Coming soon...*
+## <a name='hardware_links'></a>RaspDAC hardware installation
+### Sabre V3 connections
+The [Sabre V3 product page](http://www.audiophonics.fr/fr/dac-diy/audiophonics-i-sabre-dac-es9023-v3-tcxo-raspberry-pi-20-a-b-i2s-p-10657.html)
+shows the LCD and IR pins for the different versions of the Sabre v3.
