@@ -259,7 +259,7 @@ You should see a welcome message on the LCD display.
 Install the Kodi add-on to use LCDproc:
 1. From Kodi's main menu, move to **Settings** -> **Add-on browser** ->
 **Search**
-2. Enter **LCDproc**.
+2. Enter **LCDproc**
 3. Select **Services - XBMC LCDproc**, then **install**
 The LCD display should show "XBMC running..." and the time and date.
 
@@ -278,7 +278,7 @@ On my device, the IR receiver data pin is connected to GPIO 26. As of today, OSM
 doesn't allow defining a GPIO pin higher than 25 for an IR receiver.
 I submitted a [pull request](https://github.com/osmc/osmc/pull/377) for this.
 
-For the moment, you can modify your existing installation:
+Until this changes are released, you can modify your existing installation:
 Stop Kodi:
 ```
 $ sudo systemctl stop mediacenter
@@ -299,6 +299,19 @@ to (update the ranges):
                 <setting default="18" id="gpio_in_pin"  label="gpio_in_pin"  option="int" range="1,1,27" type="slider" visible="eq(-2,tr$
 ```
 
+Update the range validator for the OSMC Pi config addon:
+```
+$ nano /usr/share/kodi/addons/script.module.osmcsetting.pi/resources/lib/OSMC_REparser.py
+```
+Press CTRL+W and enter 'def gpio_pin_validation', then change the following line:
+```
+        return generic_range_validation(config_value, range(1,26))
+```
+to (update the ranges):
+```
+        return generic_range_validation(config_value, range(1,28))
+```
+
 Restart Kodi:
 ```
 $ sudo systemctl start mediacenter
@@ -308,12 +321,7 @@ Select the parameters:
 1. From Kodi's main menu, go to **My OSMC** -> **Pi Config** -> **Hardware Support**
 2. Activate **Enable LIRC GPIO support**
 3. You need these values: **gpio_out_pin**: 10, **gpio_in_pin**: 26,
-**gpio_in_pull**: down.
-
-**Note**: OSMC keeps resetting **gpio_in_pin** to 18 when you enter the **Hardware Support**
-settings, even if you didn't make any modifications. I am investigating this
-issue. For the moment, rememnber to always set it to 26 and save the changes
-before you exit.
+**gpio_in_pull**: down
 
 Restart the Rapsberry Pi for the changes to take effect.
 
