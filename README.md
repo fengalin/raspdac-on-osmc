@@ -248,9 +248,8 @@ Install the scripts and the systemd unit:
 ```
 $ sudo cp -r ~/Projects/raspdac-on-osmc/lcd/* /usr/local/
 ```
-**Important**: the default configuration is configured for the Sabre V3 version.
-If you use a V2, proceed as follow (otherwise you can skip to [register the
-service](#lcd_service)):
+**Important**: I configured LCDd for the Sabre V3 version. If you use a V2,
+proceed as follow (otherwise you can skip to [register the service](#lcd_service)):
 ```
 $ sudo nano /usr/local/etc/LCDd.conf
 ```
@@ -292,41 +291,41 @@ On my device, the IR receiver data pin is connected to GPIO 26. As of today, OSM
 doesn't allow defining a GPIO pin higher than 25 for an IR receiver.
 I submitted a [pull request](https://github.com/osmc/osmc/pull/377) for this.
 
-Until this changes are released, you can modify your existing installation:
-Stop Kodi:
+Until this changes are released, you can modify your existing installation.
+1. Stop Kodi:
 ```
 $ sudo systemctl stop mediacenter
 ```
 
-Open the file which defines the limits for the IR receiver's GPIO:
+2. Open the file which defines the limits for the IR receiver's GPIO:
 ```
 $ nano /usr/share/kodi/addons/script.module.osmcsetting.pi/resources/settings.xml
 ```
-and change the following lines:
+  and change the following lines:
 ```
                 <setting default="17" id="gpio_out_pin" label="gpio_out_pin" option="int" range="1,1,25" type="slider" visible="eq(-1,tr$
                 <setting default="18" id="gpio_in_pin"  label="gpio_in_pin"  option="int" range="1,1,25" type="slider" visible="eq(-2,tr$
 ```
-to (update the ranges):
+  to (update the ranges):
 ```
                 <setting default="17" id="gpio_out_pin" label="gpio_out_pin" option="int" range="1,1,27" type="slider" visible="eq(-1,tr$
                 <setting default="18" id="gpio_in_pin"  label="gpio_in_pin"  option="int" range="1,1,27" type="slider" visible="eq(-2,tr$
 ```
 
-Update the range validator for the OSMC Pi config addon:
+3. Update the range validator for the OSMC Pi config addon:
 ```
 $ nano /usr/share/kodi/addons/script.module.osmcsetting.pi/resources/lib/OSMC_REparser.py
 ```
-Press CTRL+W and enter 'def gpio_pin_validation', then change the following line:
+  Press CTRL+W and enter 'def gpio_pin_validation', then change the following line:
 ```
         return generic_range_validation(config_value, range(1,26))
 ```
-to (update the ranges):
+  to (update the ranges):
 ```
         return generic_range_validation(config_value, range(1,28))
 ```
 
-Restart Kodi:
+4. Restart Kodi:
 ```
 $ sudo systemctl start mediacenter
 ```
@@ -387,7 +386,7 @@ these were the lines that solved the issue:
 ```
 
 #### <a name='ir_keys'></a>Assign names to keys to control Kodi
-In order to ease the intagration with Kodi, it is a good idea to choose key
+In order to ease the integration with Kodi, it is a good idea to choose key
 names that will produce the expected result out of the box.
 
 Here are the ones I used and which allow controlling kodi to a large extent:
