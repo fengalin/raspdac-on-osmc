@@ -430,8 +430,8 @@ Of course there are other parameters like the strings **Hello** and **GoodBye**
 which are displayed when the server starts and stops.
 
 ## <a name='conf_web_server'></a>Use a mobile device interface to control the media center
-Kodi has a builtin web server that allows manging some of its features from
-a browser or a dedicated mobile device application: Kore.
+Kodi comes with a web server that allows managing some of its features from
+a browser or a dedicated mobile device application: **Kore**.
 
 These are the steps to configure the web server:
 1. From Kodi's main menu, move to **Settings** -> **Services** ->
