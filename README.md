@@ -274,7 +274,10 @@ Install the Kodi add-on to use LCDproc:
 **Search**
 2. Enter **LCDproc**
 3. Select **Services - XBMC LCDproc**, then **install**
-The LCD display should show "XBMC running..." and the time and date.
+
+The LCD display should show "XBMC running..." and the time and date. See
+[Modify how things are displayed](#conf_display) if you want to change this
+message.
 
 
 ## <a name='ir_receiver'></a>Configure an Infrared Remote Control
