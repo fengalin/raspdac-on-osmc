@@ -41,6 +41,7 @@ receiver**. See [this section](#ir_receiver) for how-to install and configure
 - [Tips](#tips)
   * [Modify how things are displayed](#conf_display)
   * [Use a mobile device interface to control the media center](#conf_web_server)
+  * [Disable Wifi and Bluetooth](#disable_wifi_bt)
 - [Links](#links)
   * [Resources used for this project](#resources)
   * [RaspDAC hardware installation](#hardware_links)
@@ -452,6 +453,45 @@ settings you used above.
 Kore hosts a copy of the metadata from your media center. You can browse your
 collection and control playlists, etc.
 
+## <a name='disable_wifi_bt'></a>Disable Wifi and Bluetooth
+For many reasons, you might want to disable the Raspberry Pi's Wifi and Bluetooth
+interfaces. I didn't find a definitive minimalistic procedure, so here is a set
+of measures which I believe prevents the Pi from using these interfaces.
+
+1. Deactivate and mask the services:
+```
+$ sudo systemctl disable wpa_supplicant
+$ sudo systemctl mask wpa_supplicant
+$ sudo systemctl disable bluetooth
+$ sudo systemctl mask bluetooth
+```
+
+2. Blacklist the kernel modules:
+```
+$ nano /etc/modprobe.d/raspi-blacklist.conf
+```
+Add these lines:
+```
+blacklist brcmfmac
+blacklist brcmutil
+blacklist btbcm
+blacklist hci_uart
+```
+
+3. Disable the interfaces:
+```
+$ sudo nano /boot/config.txt
+```
+Add these lines:
+```
+dtoverlay=pi3-disable-wifi
+dtoveraly=pi3-disable-bt
+```
+
+4. Reboot:
+```
+$ sudo systemctl reboot
+```
 
 # <a name='links'></a>Links
 ## <a name='resources'></a>Resources used for this project
@@ -459,7 +499,7 @@ collection and control playlists, etc.
 [RaspDAC-Display](https://github.com/dhrone/Raspdac-Display) was the main source
 for this project.
 
-### Handling Raspberry Pi GPIO
+### Raspberry Pi GPIO Handling
 I choosed to use the [RPi.GIO module](https://sourceforge.net/p/raspberry-gpio-python/wiki/Examples/)
 as it was flexible, yet easy to use and it supported passively listening to GPIO.
 
@@ -474,6 +514,9 @@ systemd](https://www.freedesktop.org/wiki/Software/systemd/dbus/).
 ### HD44780 LCD using LCDproc
 [This how-to](http://www.rototron.info/lcdproc-tutorial-for-raspberry-pi/) showed
 me the way. However, the project is now hosted on [github](https://github.com/lcdproc/lcdproc).
+
+### Disabling Wifi and Bluetooth
+The measures I propose come from [this thread](http://raspberrypi.stackexchange.com/questions/43720/disable-wifi-wlan0-on-pi-3).
 
 ## <a name='hardware_links'></a>RaspDAC hardware installation
 ### Sabre V3 connections
