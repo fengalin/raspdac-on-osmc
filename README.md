@@ -464,6 +464,8 @@ $ sudo systemctl disable wpa_supplicant
 $ sudo systemctl mask wpa_supplicant
 $ sudo systemctl disable bluetooth
 $ sudo systemctl mask bluetooth
+$ sudo systemctl disable brcm43xx
+$ sudo systemctl mask brcm43xx
 ```
 
 2. Blacklist the kernel modules:
