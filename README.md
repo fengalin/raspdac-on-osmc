@@ -393,7 +393,7 @@ these were the lines that solved the issue:
 In order to ease the integration with Kodi, it is a good idea to choose key
 names that will produce the expected result out of the box.
 
-Here are the ones I used and which allow controlling kodi to a large extent:
+Here are the ones I used and which allow controlling Kodi to a large extent:
 - KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN
 - KEY_OK, KEY_BACK, KEY_HOME
 - KEY_CLOSE, KEY_POWER
@@ -408,7 +408,7 @@ $ sudo cp your_lircd.conf /etc/lirc/lircd.conf
 ```
 (or use a symbolic link if you prefer)
 
-Then restart, LIRC and Kodi:
+Restart LIRC and Kodi:
 ```
 $ sudo systemctl restart eventlircd
 $ sudo systemctl restart mediacenter
@@ -470,7 +470,7 @@ $ sudo systemctl mask brcm43xx
 
 2. Blacklist the kernel modules:
 ```
-$ nano /etc/modprobe.d/raspi-blacklist.conf
+$ sudo nano /etc/modprobe.d/raspi-blacklist.conf
 ```
 Add these lines:
 ```
