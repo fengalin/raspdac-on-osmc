@@ -72,7 +72,7 @@ OSMC. If you wish to follow this path, click on your installation host OS and
 follow the instructions. I never used the installer.
 
 When you're done, insert the SDCard into the Rapsberry Pi and start the Pi.
-Continue to the [Configuration section below](#configure_osmc).
+Jump to the [configuration section below](#configure_osmc).
 
 
 ### Option 2: manual installation
@@ -107,7 +107,7 @@ start the Pi.
 
 OSMC will format and install the filesystem. When it's done, it will reboot.
 Follow the instructions. Choose a name for your media center. When prompted for
-SSH, accept the default (Enabled).
+SSH, accept the default option (Enabled).
 
 
 ## <a name='configure_osmc'></a>Configure OSMC for the Sabre DAC
@@ -135,7 +135,7 @@ backspace key to return to the main menu.
 7. Move down to **Power**
 8. Move down to **Reboot** and press the enter key.
 
-If your RaspDAC is connected to an amplifier, you should get notification sounds
+If your RaspDAC is linked to an amplifier, you should get notification sounds
 from Kodi when you move through the menus.
 
 ### Configure the installation host to connect to your RaspDAC
@@ -149,7 +149,7 @@ In the rest of this section, I will use the IP address 192.168.0.15.
 
 **Note:** it is a good idea to assign a static address to the RaspDAC.
 
-Get the ssh id from the RaspDAC (enter 'osmc' when prompted for the password):
+Prepare for passwordless ssh sessions (enter 'osmc' when prompted for the password):
 ```
 $ ssh-copy-id osmc@192.168.0.15
 ```
@@ -168,7 +168,8 @@ For security reasons, you should change the password:
 $ sudo passwd
 ```
 
-After you log out, just issue the following command to connect to the RaspDAC:
+After you log out, just issue the following command to connect to the RaspDAC
+(you won't need the password):
 ```
 $ ssh osmc@192.168.0.15
 ```
@@ -190,7 +191,7 @@ $ git clone https://github.com/fengalin/raspdac-on-osmc
 ## <a name='power_unit'></a>Handle the Power Management Unit
 The project contains scripts and a systemd unit to handle the power management
 subsystem. This allows stopping the button from blinking when OSMC is started and handling
-soft reboot or shutdowns as well as clean shutdown when the button is pressed.
+soft reboot or shutdown as well as clean shutdown when the button is pressed.
 
 The scripts rely on the python RPi.GPIO module which can be installed using pip
 (we will also need gcc):
@@ -209,7 +210,7 @@ $ sudo systemctl enable raspdac
 $ sudo systemctl start raspdac
 ```
 After a few seconds, the power button should stop blinking. You can now press it
-to cleanly shutdown the RaspDAC or manage the power from the command line
+to cleanly shutdown the RaspDAC or handle the power unit from the command line
 or from Kodi's user interface. E.g. to shutdown from the command line:
 ```
 $ sudo systemctl poweroff
@@ -221,7 +222,7 @@ to show informations on a LCD display. Obviously, the add-on relies on a
 properly configured [LCDproc](https://github.com/lcdproc/lcdproc) server.
 LCDproc supports the OLED LCD HD44780 display that comes with the RaspDAC.
 LCDproc gained support for the Raspeberry Pi 3 recently, so we need to get
-a newer version (0.5.9) than the one provided by OSMC (0.5.7-2 as of today).
+a newer version (0.5.9) than the one we can get from OSMC (0.5.7-2 as of today).
 
 LCDproc generation requires automake:
 ```
@@ -250,7 +251,7 @@ Install the scripts and the systemd unit:
 $ sudo cp -r ~/Projects/raspdac-on-osmc/lcd/* /usr/local/
 ```
 **Important**: I configured LCDd for the Sabre V3 version. If you use a V2,
-proceed as follow (otherwise you can skip to [register the service](#lcd_service)):
+proceed as follows (otherwise you can skip to [register the service](#lcd_service)):
 ```
 $ sudo nano /usr/local/etc/LCDd.conf
 ```
@@ -295,7 +296,7 @@ On my device, the IR receiver data pin is connected to GPIO 26. As of today, OSM
 doesn't allow defining a GPIO pin higher than 25 for an IR receiver.
 I submitted a [pull request](https://github.com/osmc/osmc/pull/377) for this.
 
-Until this changes are released, you can modify your existing installation.
+Until these changes are released, you can modify your existing installation.
 1. Stop Kodi:
 ```
 $ sudo systemctl stop mediacenter
@@ -324,7 +325,7 @@ $ nano /usr/share/kodi/addons/script.module.osmcsetting.pi/resources/lib/OSMC_RE
 ```
         return generic_range_validation(config_value, range(1,26))
 ```
-  to (update the ranges):
+  to (update the range):
 ```
         return generic_range_validation(config_value, range(1,28))
 ```
@@ -337,7 +338,7 @@ $ sudo systemctl start mediacenter
 Select the parameters:
 1. From Kodi's main menu, go to **My OSMC** -> **Pi Config** -> **Hardware Support**
 2. Activate **Enable LIRC GPIO support**
-3. You need these values: **gpio_out_pin**: 10, **gpio_in_pin**: 26,
+3. Select the following values: **gpio_out_pin**: 10, **gpio_in_pin**: 26,
 **gpio_in_pull**: down
 
 Restart the Rapsberry Pi for the changes to take effect.
@@ -358,8 +359,9 @@ $ sudo systemctl stop eventlircd
 $ cat /dev/lirc0
 ```
 
-Now, press a few keys on the remote control. If you see garbage, it is a good sign.
-If the command doesn't print anything, you might have an issue with your IR receiver.
+Now, press a few keys on the remote control. If you can see gibberish, it's
+actually a good sign. If the command doesn't print anything, you might have an
+issue with your IR receiver.
 
 Check [this database](http://lirc-remotes.sourceforge.net/remotes-table.html) for
 your remote. If you can find it, download the matching lircd.conf file and go
@@ -369,7 +371,7 @@ to [the following section](#ir_keys)
 If you can't find your remote in the database, you'll have to generate the
 configuration file.
 
-First, get the list of the valid names for keys with the following command:
+First, get the list of the valid key names with the following command:
 ```
 $ irrecord -l
 ```
@@ -380,10 +382,10 @@ $ irrecord -d /dev/lirc0 /home/osmc/your_lircd.conf
 ```
 
 You will probably need to start over before getting it right. Check the next
-section for usefull keys. Using this method, I had a bouncing effect when pressing
+section for usefull keys. Using this method, I had a bouncing effect when I pressed
 the keys. From what I read, sorting this issue out depends a lot on the remote control
 itself. I ended up finding my remote control in the database. As an example,
-these were the lines that solved the issue:
+these were the lines that made the difference:
 ```
   min_code_repeat 1
   min_repeat      2
@@ -426,12 +428,12 @@ $ nano ~/.kodi/userdata/LCD.xml
 ```
 
 If you want the display to scroll long lines slower or faster, you can adjust
-the **FrameInterval** in the LCDd configuration:
+the **FrameInterval** in the LCDd configuration file:
 ```
 $ sudo nano /usr/local/etc/LCDd.conf
 ```
 Of course there are other parameters like the strings **Hello** and **GoodBye**
-which are displayed when the server starts and stops.
+which define what to display when the server starts and stops.
 
 ## <a name='conf_web_server'></a>Use a mobile device interface to control the media center
 Kodi comes with a web server that allows managing some of its features from
@@ -447,15 +449,15 @@ Check that the web server is runing: open a browser and connect to this URL:
 http://192.168.0.15:8080/ (replace '192.168.0.15' with the IP of your RaspDAC).
 You should be prompted with a user and password. Enter the ones you defined above.
 
-If the connection succeeded, try installing Kore and configure it with the same
+If the connection succeeds, try installing Kore and configure it with the same
 settings you used above.
 
-Kore hosts a copy of the metadata from your media center. You can browse your
-collection and control playlists, etc.
+Kore hosts a copy of the metadata from your audio and video collection. You can
+browse your collection and control playlists from the mobile device.
 
 ## <a name='disable_wifi_bt'></a>Disable Wifi and Bluetooth
 For many reasons, you might want to disable the Raspberry Pi's Wifi and Bluetooth
-interfaces. I didn't find a definitive minimalistic procedure, so here is a set
+interfaces. I couldn't find a definitive minimalistic procedure, so here is a set
 of measures which I believe prevents the Pi from using these interfaces.
 
 1. Deactivate and mask the services:
@@ -503,12 +505,12 @@ for this project.
 
 ### Raspberry Pi GPIO Handling
 I choosed to use the [RPi.GIO module](https://sourceforge.net/p/raspberry-gpio-python/wiki/Examples/)
-as it was flexible, yet easy to use and it supported passively listening to GPIO.
+as it was flexible, yet easy to use and it supported passive listening to GPIO.
 
 ### Distinguish between reboot and power off
 The [shutdown script](power/sbin/raspdac-shutdown.py) uses the strategy described
-[here](https://stackoverflow.com/questions/25166085/how-can-a-systemd-controlled-service-distinguish-between-shutdown-and-reboot) to determine
-if the running shutdown operation is a reboot or a power off.
+[here](https://stackoverflow.com/questions/25166085/how-can-a-systemd-controlled-service-distinguish-between-shutdown-and-reboot)
+to determine if the running shutdown operation is a reboot or a power off.
 
 In order to implement it in pure python, I used the [DBUS interface for
 systemd](https://www.freedesktop.org/wiki/Software/systemd/dbus/).
