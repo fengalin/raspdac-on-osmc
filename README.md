@@ -84,7 +84,7 @@ to the latest release for Raspeberry Pi 2/3.
 cd to the directory where you downloaded the compressed image and issue the
 following command:
 ```
-$ gunzip OSMC_TGT_rbp2_20170615.img.gz
+$ gunzip OSMC_TGT_rbp2_20170702.img.gz
 ```
 
 3. Prepare the SDCard: insert the SDCard in your installation host and figure
@@ -98,7 +98,7 @@ Copy the image to the SDCard. **Warning**: this will erase everything on the
 SDCard. Make sure the device matches the SDCard before proceeding with the
 following command:
 ```
-$ sudo dd bs=4M if=OSMC_TGT_rbp2_20170615.img of=/dev/sdb
+$ sudo dd bs=4M if=OSMC_TGT_rbp2_20170702.img of=/dev/sdb
 ```
 
 4. Finalize the installation: eject the SDCard from the installation host and
@@ -160,7 +160,7 @@ $ uname -a
 ```
 You should read someting like this:
 ```
-Linux raspdac 4.9.29-5-osmc #1 SMP PREEMPT Tue Jun 6 18:23:42 UTC 2017 armv7l GNU/Linux
+Linux raspdac 4.9.29-8-osmc #1 SMP PREEMPT Tue Jun 16 21:37:12 UTC 2017 armv7l GNU/Linux
 ```
 
 For security reasons, you should change the password:
@@ -292,50 +292,14 @@ I couldn't find this exact model locally, so I went with a
 hole a bit from the inside for the 4838 to fit properly.
 
 ### Configure OSMC
-On my device, the IR receiver data pin is connected to GPIO 26. As of today, OSMC
-doesn't allow defining a GPIO pin higher than 25 for an IR receiver.
-I submitted a [pull request](https://github.com/osmc/osmc/pull/377) for this.
+On my device, the IR receiver data pin is connected to GPIO 26.
 
-Until these changes are released, you can modify your existing installation.
-1. Stop Kodi:
-```
-$ sudo systemctl stop mediacenter
-```
+**Note**: Prior to version 2017.06-1, OSMC didn't allow defining a GPIO pin higher
+than 25 for an IR receiver. If you want to install a version earlier than 2017.06-1,
+you will need to patch your installation manually. please refer to the instructions
+included in [tag 1.0.0](https://github.com/fengalin/raspdac-on-osmc/tree/1.0.0).
 
-2. Open the file which defines the limits for the IR receiver's GPIO:
-```
-$ nano /usr/share/kodi/addons/script.module.osmcsetting.pi/resources/settings.xml
-```
-  and change the following lines:
-```
-                <setting default="17" id="gpio_out_pin" label="gpio_out_pin" option="int" range="1,1,25" type="slider" visible="eq(-1,tr$
-                <setting default="18" id="gpio_in_pin"  label="gpio_in_pin"  option="int" range="1,1,25" type="slider" visible="eq(-2,tr$
-```
-  to (update the ranges):
-```
-                <setting default="17" id="gpio_out_pin" label="gpio_out_pin" option="int" range="1,1,27" type="slider" visible="eq(-1,tr$
-                <setting default="18" id="gpio_in_pin"  label="gpio_in_pin"  option="int" range="1,1,27" type="slider" visible="eq(-2,tr$
-```
-
-3. Update the range validator for the OSMC Pi config addon:
-```
-$ nano /usr/share/kodi/addons/script.module.osmcsetting.pi/resources/lib/OSMC_REparser.py
-```
-  Press CTRL+W and enter 'def gpio_pin_validation', then change the following line:
-```
-        return generic_range_validation(config_value, range(1,26))
-```
-  to (update the range):
-```
-        return generic_range_validation(config_value, range(1,28))
-```
-
-4. Restart Kodi:
-```
-$ sudo systemctl start mediacenter
-```
-
-Select the parameters:
+Select the parameters for the IR receiver:
 1. From Kodi's main menu, go to **My OSMC** -> **Pi Config** -> **Hardware Support**
 2. Activate **Enable LIRC GPIO support**
 3. Select the following values: **gpio_out_pin**: 10, **gpio_in_pin**: 26,
