@@ -296,8 +296,8 @@ On my device, the IR receiver data pin is connected to GPIO 26.
 
 **Note**: Prior to version 2017.06-1, OSMC didn't allow defining a GPIO pin higher
 than 25 for an IR receiver. If you want to install a version earlier than 2017.06-1,
-you will need to patch your installation manually. please refer to the instructions
-included in [tag 1.0.0](https://github.com/fengalin/raspdac-on-osmc/tree/1.0.0).
+you will need to patch your installation manually. Please refer to the instructions
+in [tag 1.0.0](https://github.com/fengalin/raspdac-on-osmc/tree/1.0.0).
 
 Select the parameters for the IR receiver:
 1. From Kodi's main menu, go to **My OSMC** -> **Pi Config** -> **Hardware Support**
