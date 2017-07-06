@@ -10,12 +10,12 @@ device, you are supposed to install the OS yourself.
 
 The product page refers to a pre-configured version of RuneAudio, but the link
 was broken when I checked, so I had to start from scratch. After the OS
-installation, you have things to configure such as choosing an overaly to use
+installation, you have things to configure such as choosing an overlay to use
 the DAC, and figuring out how to handle the power management unit and the display.
 @dhrone wrote a [very helpfull project](https://github.com/dhrone/Raspdac-Display)
 to describe how to install the RaspDAC on audio oriented distributions such as
-Volumio and RuneAudio. These instructions helped me a lot understand how the
-RaspDAC could be supported.
+Volumio and RuneAudio. These instructions helped me understand how the RaspDAC
+could be supported.
 
 Of course I wanted to play my audio collection, but I though: it would be great
 if the device could play videos too. So, I searched for an active distribution
@@ -84,7 +84,7 @@ to the latest release for Raspeberry Pi 2/3.
 cd to the directory where you downloaded the compressed image and issue the
 following command:
 ```
-$ gunzip OSMC_TGT_rbp2_20170702.img.gz
+$ gunzip OSMC_TGT_rbp2_20170705.img.gz
 ```
 
 3. Prepare the SDCard: insert the SDCard in your installation host and figure
@@ -98,7 +98,7 @@ Copy the image to the SDCard. **Warning**: this will erase everything on the
 SDCard. Make sure the device matches the SDCard before proceeding with the
 following command:
 ```
-$ sudo dd bs=4M if=OSMC_TGT_rbp2_20170702.img of=/dev/sdb
+$ sudo dd bs=4M if=OSMC_TGT_rbp2_20170705.img of=/dev/sdb
 ```
 
 4. Finalize the installation: eject the SDCard from the installation host and
