@@ -83,22 +83,22 @@ to the latest release for Raspeberry Pi 2/3.
 2. Extract the image:
 cd to the directory where you downloaded the compressed image and issue the
 following command:
-```
-$ gunzip OSMC_TGT_rbp2_20170705.img.gz
+``` bash
+gunzip OSMC_TGT_rbp2_20170705.img.gz
 ```
 
 3. Prepare the SDCard: insert the SDCard in your installation host and figure
 out which device it is associated to.
 If the OS auto-mounted the partitions, unmount them. E.g.:
-```
-$ unmount /dev/sdb1
-$ unmount /dev/sdb2
+```bash
+unmount /dev/sdb1
+unmount /dev/sdb2
 ```
 Copy the image to the SDCard. **Warning**: this will erase everything on the
 SDCard. Make sure the device matches the SDCard before proceeding with the
 following command:
-```
-$ sudo dd bs=4M if=OSMC_TGT_rbp2_20170705.img of=/dev/sdb
+``` bash
+sudo dd bs=4M if=OSMC_TGT_rbp2_20170705.img of=/dev/sdb
 ```
 
 4. Finalize the installation: eject the SDCard from the installation host and
@@ -142,21 +142,21 @@ from Kodi when you move through the menus.
 First you need to figure out which IP address is used by the Raspberry Pi. There
 are multiple ways of doing this depending on your network infrastructure.
 You may try something like this:
-```
-$ arp -a
+``` bash
+arp -a
 ```
 In the rest of this section, I will use the IP address 192.168.0.15.
 
 **Note:** it is a good idea to assign a static address to the RaspDAC.
 
 Prepare for passwordless ssh sessions (enter 'osmc' when prompted for the password):
-```
-$ ssh-copy-id osmc@192.168.0.15
+``` bash
+ssh-copy-id osmc@192.168.0.15
 ```
 Log in:
-```
-$ ssh osmc@192.168.0.15
-$ uname -a
+``` bash
+ssh osmc@192.168.0.15
+uname -a
 ```
 You should read someting like this:
 ```
@@ -164,28 +164,27 @@ Linux raspdac 4.9.29-8-osmc #1 SMP PREEMPT Tue Jun 16 21:37:12 UTC 2017 armv7l G
 ```
 
 For security reasons, you should change the password:
-```
-$ sudo passwd
+``` bash
+sudo passwd
 ```
 
 After you log out, just issue the following command to connect to the RaspDAC
 (you won't need the password):
-```
-$ ssh osmc@192.168.0.15
+``` bash
+ssh osmc@192.168.0.15
 ```
 
 ### Download this project
 For the rest of the installation, we will use files from various git projects.
 On the RaspDAC, in an ssh session (see above), install git:
-```
-$ sudo apt-get install git-core
+``` bash
+sudo apt-get install git-core
 ```
 
 Clone this project:
-```
-$ mkdir ~/Projects
-$ cd ~/Projects
-$ git clone https://github.com/fengalin/raspdac-on-osmc
+``` bash
+mkdir ~/Projects && cd ~/Projects
+git clone https://github.com/fengalin/raspdac-on-osmc
 ```
 
 ## <a name='power_unit'></a>Handle the Power Management Unit
@@ -195,25 +194,25 @@ soft reboot or shutdown as well as clean shutdown when the button is pressed.
 
 The scripts rely on the python RPi.GPIO module which can be installed using pip
 (we will also need gcc):
-```
-$ sudo apt-get install gcc python-dev python-pip
-$ sudo pip install rpi.gpio
+``` bash
+sudo apt-get install gcc python-dev python-pip
+sudo pip install rpi.gpio
 ```
 
 Install the scripts and the systemd unit:
-```
-$ sudo cp -r ~/Projects/raspdac-on-osmc/power/* /usr/local/
+``` bash
+sudo cp -r ~/Projects/raspdac-on-osmc/power/* /usr/local/
 ```
 Register and start the service:
-```
-$ sudo systemctl enable raspdac
-$ sudo systemctl start raspdac
+``` bash
+sudo systemctl enable raspdac
+sudo systemctl start raspdac
 ```
 After a few seconds, the power button should stop blinking. You can now press it
 to cleanly shutdown the RaspDAC or handle the power unit from the command line
 or from Kodi's user interface. E.g. to shutdown from the command line:
-```
-$ sudo systemctl poweroff
+``` bash
+sudo systemctl poweroff
 ```
 
 ## <a name='lcd_display'></a>Configure the LCD
@@ -225,35 +224,35 @@ LCDproc gained support for the Raspeberry Pi 3 recently, so we need to get
 a newer version (0.5.9) than the one we can get from OSMC (0.5.7-2 as of today).
 
 LCDproc generation requires automake:
-```
-$ sudo apt-get install automake make
+``` bash
+sudo apt-get install automake make
 ```
 
 Clone LCDproc:
-```
-$ cd ~/Projects
-$ git clone https://github.com/lcdproc/lcdproc
+``` bash
+cd ~/Projects
+git clone https://github.com/lcdproc/lcdproc
 ```
 
 Generate LCDproc with support for HD44780 only and install it:
-```
-$ cd ~/Projects/lcdproc
-$ sh ./autogen.sh
-$ ./configure --enable-drivers=hd44780 --disable-libusb --disable-libusb-1-0 --disable-libftdi --disable-libX11 --disable-libhid --disable-libpng --disable-freetype --disable-ethlcd
-$ make
-$ sudo make install
+``` bash
+cd ~/Projects/lcdproc
+sh ./autogen.sh
+./configure --enable-drivers=hd44780 --disable-libusb --disable-libusb-1-0 --disable-libftdi --disable-libX11 --disable-libhid --disable-libpng --disable-freetype --disable-ethlcd
+make
+sudo make install
 ```
 
 I stripped the configuration and adapted it to use the LCD via the GPIO.
 I also wrote a systemd unit in order to start the daemon automatically.
 Install the scripts and the systemd unit:
-```
-$ sudo cp -r ~/Projects/raspdac-on-osmc/lcd/* /usr/local/
+``` bash
+sudo cp -r ~/Projects/raspdac-on-osmc/lcd/* /usr/local/
 ```
 **Important**: I configured LCDd for the Sabre V3 version. If you use a V2,
 proceed as follows (otherwise you can skip to [register the service](#lcd_service)):
-```
-$ sudo nano /usr/local/etc/LCDd.conf
+``` bash
+sudo nano /usr/local/etc/LCDd.conf
 ```
 replace the following line:
 ```
@@ -265,9 +264,9 @@ pin_D7=15
 ```
 
 <a name='lcd_service'></a>Register and start the service:
-```
-$ sudo systemctl enable LCDd
-$ sudo systemctl start LCDd
+``` bash
+sudo systemctl enable LCDd
+sudo systemctl start LCDd
 ```
 You should see a welcome message on the LCD display.
 
@@ -314,13 +313,13 @@ is a subsystem and a set of tools to handle remote controls on Linux.
 
 Check if the Raspberry Pi receives an IR signal.
 1. Stop the LIRC server:
-```
-$ sudo systemctl stop eventlircd
+``` bash
+sudo systemctl stop eventlircd
 ```
 
 2. Dump the raw device:
-```
-$ cat /dev/lirc0
+``` bash
+cat /dev/lirc0
 ```
 
 Now, press a few keys on the remote control. If you can see gibberish, it's
@@ -336,13 +335,13 @@ If you can't find your remote in the database, you'll have to generate the
 configuration file.
 
 First, get the list of the valid key names with the following command:
-```
-$ irrecord -l
+``` bash
+irrecord -l
 ```
 
 Then, use this command to generate a configuration file and follow the instructions:
-```
-$ irrecord -d /dev/lirc0 /home/osmc/your_lircd.conf
+``` bash
+irrecord -d /dev/lirc0 /home/osmc/your_lircd.conf
 ```
 
 You will probably need to start over before getting it right. Check the next
@@ -368,16 +367,16 @@ Here are the ones I used and which allow controlling Kodi to a large extent:
 - KEY_PREVIOUS, KEY_NEXT, KEY_STOP, KEY_PLAYPAUSE, KEY_FASTFORWARD, KEY_REWIND
 
 Edit your_lircd.conf file to use these names. Then set it as the default configuration:
-```
-$ sudo rm /etc/lirc/lircd.conf
-$ sudo cp your_lircd.conf /etc/lirc/lircd.conf
+``` bash
+sudo rm /etc/lirc/lircd.conf
+sudo cp your_lircd.conf /etc/lirc/lircd.conf
 ```
 (or use a symbolic link if you prefer)
 
 Restart LIRC and Kodi:
-```
-$ sudo systemctl restart eventlircd
-$ sudo systemctl restart mediacenter
+``` bash
+sudo systemctl restart eventlircd
+sudo systemctl restart mediacenter
 ```
 
 Use the remote to navigate in Kodi's UI. If it doesn't work, I'm afraid, you'll
@@ -387,14 +386,14 @@ have to dig a little more into [LIRC's documentation](http://www.lirc.org/html/i
 ## <a name='conf_display'></a>Modify how things are displayed
 Kodi stores a definition of the screens to display depending on the context in
 the following file:
-```
-$ nano ~/.kodi/userdata/LCD.xml
+``` bash
+nano ~/.kodi/userdata/LCD.xml
 ```
 
 If you want the display to scroll long lines slower or faster, you can adjust
 the **FrameInterval** in the LCDd configuration file:
-```
-$ sudo nano /usr/local/etc/LCDd.conf
+``` bash
+sudo nano /usr/local/etc/LCDd.conf
 ```
 Of course there are other parameters like the strings **Hello** and **GoodBye**
 which define what to display when the server starts and stops.
@@ -425,18 +424,15 @@ interfaces. I couldn't find a definitive minimalistic procedure, so here is a se
 of measures which I believe prevents the Pi from using these interfaces.
 
 1. Deactivate and mask the services:
-```
-$ sudo systemctl disable wpa_supplicant
-$ sudo systemctl mask wpa_supplicant
-$ sudo systemctl disable bluetooth
-$ sudo systemctl mask bluetooth
-$ sudo systemctl disable brcm43xx
-$ sudo systemctl mask brcm43xx
+``` bash
+sudo systemctl disable wpa_supplicant && sudo systemctl mask wpa_supplicant
+sudo systemctl disable bluetooth && sudo systemctl mask bluetooth
+sudo systemctl disable brcm43xx && sudo systemctl mask brcm43xx
 ```
 
 2. Blacklist the kernel modules:
-```
-$ sudo nano /etc/modprobe.d/raspi-blacklist.conf
+``` bash
+sudo nano /etc/modprobe.d/raspi-blacklist.conf
 ```
 Add these lines:
 ```
@@ -447,8 +443,8 @@ blacklist hci_uart
 ```
 
 3. Disable the interfaces:
-```
-$ sudo nano /boot/config.txt
+``` bash
+sudo nano /boot/config.txt
 ```
 Add these lines:
 ```
@@ -457,8 +453,8 @@ dtoveraly=pi3-disable-bt
 ```
 
 4. Reboot:
-```
-$ sudo systemctl reboot
+``` bash
+sudo systemctl reboot
 ```
 
 # <a name='links'></a>Links
