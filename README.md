@@ -396,14 +396,14 @@ the **FrameInterval** in the LCDd configuration file:
 ``` bash
 sudo nano /usr/local/etc/LCDd.conf
 ```
-Of course there are other parameters like the strings **Hello** and **GoodBye**
+There are other parameters like the strings **Hello** and **GoodBye**
 which define what to display when the server starts and stops.
 
 ## <a name='lcd_screensaver_music'></a>Prevent the LCD from entering screen saver mode while playing music
-When Kodi enters screen saver more, the LCDProc addon swithces to a dedicated display.
-While plyaing music, the screen saver display shows the playing time with be numbers.
-If you want to be able read the song title and duration even in screen saver mode,
-edit the following file (of course, you need to have the LCDProc addon installed):
+When Kodi enters screen saver more, the LCDProc addon switches to a dedicated screen.
+While plyaing music, the screen saver screeen displays the playing time with big numbers.
+If you want to be able to read the song title and duration even in screen saver mode,
+edit the following file (you need to have the LCDProc addon installed):
 ``` bash
 nano ~/.kodi/addons/script.xbmc.lcdproc/lcdmain.py
 ```
@@ -426,6 +426,7 @@ sudo systemctl restart mediacenter
 ```
 Note: I submitted a [pull request](https://github.com/herrnst/script.xbmc.lcdproc/pull/42)
 to the LCDProc addon in order to be able to control this behaviour from the addon's settings.
+I'll explain how to activate the option when the pull request is released.
 
 ## <a name='conf_web_server'></a>Use a mobile device interface to control the media center
 Kodi comes with a web server that allows managing some of its features from
