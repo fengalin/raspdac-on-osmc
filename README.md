@@ -40,6 +40,7 @@ receiver**. See [this section](#ir_receiver) for how-to install and configure
   * [Configure an Infrared Remote Control](#ir_receiver)
 - [Tips](#tips)
   * [Modify how things are displayed](#conf_display)
+  * [Prevent the LCD from entering screeen saver mode while playing music](#lcd_screensaver_music)
   * [Use a mobile device interface to control the media center](#conf_web_server)
   * [Disable Wifi and Bluetooth](#disable_wifi_bt)
 - [Links](#links)
@@ -384,8 +385,8 @@ have to dig a little more into [LIRC's documentation](http://www.lirc.org/html/i
 
 # <a name='tips'></a>Tips
 ## <a name='conf_display'></a>Modify how things are displayed
-Kodi stores a definition of the screens to display depending on the context in
-the following file:
+The LCDProc addon stores a definition of the screens to display depending on the
+context in the following file:
 ``` bash
 nano ~/.kodi/userdata/LCD.xml
 ```
@@ -397,6 +398,34 @@ sudo nano /usr/local/etc/LCDd.conf
 ```
 Of course there are other parameters like the strings **Hello** and **GoodBye**
 which define what to display when the server starts and stops.
+
+## <a name='lcd_screensaver_music'></a>Prevent the LCD from entering screen saver mode while playing music
+When Kodi enters screen saver more, the LCDProc addon swithces to a dedicated display.
+While plyaing music, the screen saver display shows the playing time with be numbers.
+If you want to be able read the song title and duration even in screen saver mode,
+edit the following file (of course, you need to have the LCDProc addon installed):
+``` bash
+nano ~/.kodi/addons/script.xbmc.lcdproc/lcdmain.py
+```
+replace the following lines:
+```
+  elif screenSaver:
+    ret = LCD_MODE.LCD_MODE_SCREENSAVER
+```
+with:
+```
+  elif screenSaver:
+    if playingMusic:
+      ret = LCD_MODE.LCD_MODE_MUSIC
+    else:
+      ret = LCD_MODE.LCD_MODE_SCREENSAVER
+```
+Restart Kodi for the changes to take effect:
+```
+sudo systemctl restart mediacenter
+```
+Note: I submitted a [pull request](https://github.com/herrnst/script.xbmc.lcdproc/pull/42)
+to the LCDProc addon in order to be able to control this behaviour from the addon's settings.
 
 ## <a name='conf_web_server'></a>Use a mobile device interface to control the media center
 Kodi comes with a web server that allows managing some of its features from
