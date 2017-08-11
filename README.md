@@ -408,12 +408,12 @@ edit the following file (of course, you need to have the LCDProc addon installed
 nano ~/.kodi/addons/script.xbmc.lcdproc/lcdmain.py
 ```
 replace the following lines:
-```
+``` python
   elif screenSaver:
     ret = LCD_MODE.LCD_MODE_SCREENSAVER
 ```
 with:
-```
+``` python
   elif screenSaver:
     if playingMusic:
       ret = LCD_MODE.LCD_MODE_MUSIC
@@ -421,7 +421,7 @@ with:
       ret = LCD_MODE.LCD_MODE_SCREENSAVER
 ```
 Restart Kodi for the changes to take effect:
-```
+``` bash
 sudo systemctl restart mediacenter
 ```
 Note: I submitted a [pull request](https://github.com/herrnst/script.xbmc.lcdproc/pull/42)
