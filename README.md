@@ -269,7 +269,7 @@ pin_D7=15
 sudo systemctl enable LCDd
 sudo systemctl start LCDd
 ```
-You should see a welcome message on the LCD display.
+You should see a welcome message on the OLED display.
 
 Install the Kodi add-on to use LCDproc:
 1. From Kodi's main menu, move to **Settings** -> **Add-on browser** ->
@@ -284,7 +284,7 @@ message.
 
 ## <a name='ir_receiver'></a>Configure an Infrared Remote Control
 The Sabre V3 features 3 pins for an IR receiver. The case of the RaspDAC has a slot
-between the power button and the LCD to receive the module. The shape and size
+between the power button and the display to receive the module. The shape and size
 suggests it was designed for the
 [TSOP 38238](https://www.vishay.com/docs/82491/tsop382.pdf) form factor.
 I couldn't find this exact model locally, so I went with a
