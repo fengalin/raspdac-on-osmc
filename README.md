@@ -5,8 +5,8 @@ operating system.
 
 The [RaspDAC](https://www.youtube.com/watch?v=HsJU91o_yHw) is a high quality
 yet affordable network audio player. It is built on a Raspberry Pi 2 or 3 board,
-a Sabre ES9023 based DAC, a power management unit and a LCD. Being an affordable
-device, you are supposed to install the OS yourself.
+a Sabre ES9023 based DAC, a power management unit and an OLED display. Being an
+affordable device, you are supposed to install the OS yourself.
 
 The product page refers to a pre-configured version of RuneAudio, but the link
 was broken when I checked, so I had to start from scratch. After the OS
@@ -23,7 +23,7 @@ that supported the Raspeberry Pi with a special on multimedia, hence OSMC. If
 the audio capabilities of Kodi were not that good, I would install mpd and find
 a way to switch between Kodi and mpd when necessary.
 
-Kodi uses LCDproc to write on a **LCD**. This is a different approach from the one
+Kodi uses LCDproc to write on an display. This is a different approach from the one
 described in [RaspDAC-Display](https://github.com/dhrone/Raspdac-Display) and
 that's the reason why I decided to write my own how-to.
 
@@ -36,11 +36,11 @@ receiver**. See [this section](#ir_receiver) for how-to install and configure
   * [Prepare the SD Card](#prepare_sdcard)
   * [Configure OSMC for the Sabre DAC](#configure_osmc)
   * [Handle the Power Management Unit](#power_unit)
-  * [Configure the LCD](#lcd_display)
+  * [Configure the OLED Display](#oled_display)
   * [Configure an Infrared Remote Control](#ir_receiver)
 - [Tips](#tips)
   * [Modify how things are displayed](#conf_display)
-  * [Prevent the LCD from entering screeen saver mode while playing music](#lcd_screensaver_music)
+  * [Prevent the OLED from entering screeen saver mode while playing music](#oled_screensaver_music)
   * [Use a mobile device interface to control the media center](#conf_web_server)
   * [Disable Wifi and Bluetooth](#disable_wifi_bt)
 - [Links](#links)
@@ -216,11 +216,11 @@ or from Kodi's user interface. E.g. to shutdown from the command line:
 sudo systemctl poweroff
 ```
 
-## <a name='lcd_display'></a>Configure the LCD
+## <a name='oled_display'></a>Configure the OLED Display
 Kodi uses the [XBMC LCDproc add-on](http://kodi.wiki/view/Add-on:XBMC_LCDproc)
-to show informations on a LCD display. Obviously, the add-on relies on a
+to show informations on a display. Obviously, the add-on relies on a
 properly configured [LCDproc](https://github.com/lcdproc/lcdproc) server.
-LCDproc supports the OLED LCD HD44780 display that comes with the RaspDAC.
+LCDproc supports the OLED HD44780 display that comes with the RaspDAC.
 LCDproc gained support for the Raspeberry Pi 3 recently, so we need to get
 a newer version (0.5.9) than the one we can get from OSMC (0.5.7-2 as of today).
 
@@ -244,7 +244,7 @@ make
 sudo make install
 ```
 
-I stripped the configuration and adapted it to use the LCD via the GPIO.
+I stripped the configuration and adapted it to use the display via the GPIO.
 I also wrote a systemd unit in order to start the daemon automatically.
 Install the scripts and the systemd unit:
 ``` bash
@@ -277,7 +277,7 @@ Install the Kodi add-on to use LCDproc:
 2. Enter **LCDproc**
 3. Select **Services - XBMC LCDproc**, then **install**
 
-The LCD display should show "XBMC running..." and the time and date. See
+The display should show "XBMC running..." and the time and date. See
 [Modify how things are displayed](#conf_display) if you want to change this
 message.
 
@@ -399,7 +399,7 @@ sudo nano /usr/local/etc/LCDd.conf
 There are other parameters like the strings **Hello** and **GoodBye**
 which define what to display when the server starts and stops.
 
-## <a name='lcd_screensaver_music'></a>Prevent the LCD from entering screen saver mode while playing music
+## <a name='oled_screensaver_music'></a>Prevent the OLED display from entering screen saver mode while playing music
 When Kodi enters screen saver more, the LCDProc addon switches to a dedicated screen.
 While plyaing music, the screen saver screeen displays the playing time with big numbers.
 If you want to be able to read the song title and duration even in screen saver mode,
@@ -505,7 +505,7 @@ to determine if the running shutdown operation is a reboot or a power off.
 In order to implement it in pure python, I used the [DBUS interface for
 systemd](https://www.freedesktop.org/wiki/Software/systemd/dbus/).
 
-### HD44780 LCD using LCDproc
+### HD44780 display using LCDproc
 [This how-to](http://www.rototron.info/lcdproc-tutorial-for-raspberry-pi/) showed
 me the way. However, the project is now hosted on [github](https://github.com/lcdproc/lcdproc).
 
@@ -515,4 +515,4 @@ The measures I propose come from [this thread](http://raspberrypi.stackexchange.
 ## <a name='hardware_links'></a>RaspDAC hardware installation
 ### Sabre V3 connections
 The [Sabre V3 product page](http://www.audiophonics.fr/fr/dac-diy/audiophonics-i-sabre-dac-es9023-v3-tcxo-raspberry-pi-20-a-b-i2s-p-10657.html)
-shows the LCD and IR pins for the different versions of the Sabre v3.
+shows the display and IR pins for the different versions of the Sabre v3.
