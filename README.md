@@ -40,7 +40,7 @@ receiver**. See [this section](#ir_receiver) for how-to install and configure
   * [Configure an Infrared Remote Control](#ir_receiver)
 - [Tips](#tips)
   * [Modify how things are displayed](#conf_display)
-  * [Prevent the OLED from entering screeen saver mode while playing music](#oled_screensaver_music)
+  * [Prevent the OLED display from entering screeen saver mode while playing music](#oled_screensaver_music)
   * [Use a mobile device interface to control the media center](#conf_web_server)
   * [Disable Wifi and Bluetooth](#disable_wifi_bt)
 - [Links](#links)
