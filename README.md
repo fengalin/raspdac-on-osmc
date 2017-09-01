@@ -40,7 +40,6 @@ receiver**. See [this section](#ir_receiver) for how-to install and configure
   * [Configure an Infrared Remote Control](#ir_receiver)
 - [Tips](#tips)
   * [Modify how things are displayed](#conf_display)
-  * [Prevent the OLED display from entering screeen saver mode while playing music](#oled_screensaver_music)
   * [Use a mobile device interface to control the media center](#conf_web_server)
   * [Disable Wifi and Bluetooth](#disable_wifi_bt)
 - [Links](#links)
@@ -271,16 +270,41 @@ sudo systemctl start LCDd
 ```
 You should see a welcome message on the OLED display.
 
-Install the Kodi add-on to use LCDproc:
-1. From Kodi's main menu, move to **Settings** -> **Add-on browser** ->
-**Search**
-2. Enter **LCDproc**
-3. Select **Services - XBMC LCDproc**, then **install**
+The official Kodi LCDproc add-on is [pending a rewrite](https://github.com/herrnst/script.xbmc.lcdproc/pull/41#issuecomment-279232135).
+I made some modifications to the add-on in order to be able to discard the screen
+saver mode while playing music and I added a french translation. If you want to use
+my version proceed as follows:<br>
+Clone my fork of the add-on:
+``` bash
+cd ~/Projects
+git clone https://github.com/fengalin/script.xbmc.lcdproc
+```
 
-The display should show "XBMC running..." and the time and date. See
+Install the files:
+``` bash
+cp -R ~/Projects/script.xbmc.lcdproc ~/.kodi/addons
+```
+
+Restart Kodi:
+``` bash
+sudo systemctl restart mediacenter
+```
+
+Activate the add-on:
+1. From Kodi's main menu, move to **Settings** -> **Add-on browser** ->
+**My add-ons** -> **Services** -> **XBMC LCDproc**
+2. Select **Activate**
+3. Un-select **Auto update**
+
+The display should show "Kodi running..." and the time and date. See
 [Modify how things are displayed](#conf_display) if you want to change this
 message.
 
+If you want to discard the screen saver mode while playing music (from the LCDproc
+add-on screen you reached just above):
+1. Select **Configure**
+2. From **Behaviour**, move right
+3. Move down and un-select **Switch to screen saver mode while playing music**
 
 ## <a name='ir_receiver'></a>Configure an Infrared Remote Control
 The Sabre V3 features 3 pins for an IR receiver. The case of the RaspDAC has a slot
@@ -398,35 +422,6 @@ sudo nano /usr/local/etc/LCDd.conf
 ```
 There are other parameters like the strings **Hello** and **GoodBye**
 which define what to display when the server starts and stops.
-
-## <a name='oled_screensaver_music'></a>Prevent the OLED display from entering screen saver mode while playing music
-When Kodi enters screen saver more, the LCDProc addon switches to a dedicated screen.
-While plyaing music, the screen saver screeen displays the playing time with big numbers.
-If you want to be able to read the song title and duration even in screen saver mode,
-edit the following file (you need to have the LCDProc addon installed):
-``` bash
-nano ~/.kodi/addons/script.xbmc.lcdproc/lcdmain.py
-```
-replace the following lines:
-``` python
-  elif screenSaver:
-    ret = LCD_MODE.LCD_MODE_SCREENSAVER
-```
-with:
-``` python
-  elif screenSaver:
-    if playingMusic:
-      ret = LCD_MODE.LCD_MODE_MUSIC
-    else:
-      ret = LCD_MODE.LCD_MODE_SCREENSAVER
-```
-Restart Kodi for the changes to take effect:
-``` bash
-sudo systemctl restart mediacenter
-```
-Note: I submitted a [pull request](https://github.com/herrnst/script.xbmc.lcdproc/pull/42)
-to the LCDProc addon in order to be able to control this behaviour from the addon's settings.
-I'll explain how to activate the option when the pull request is released.
 
 ## <a name='conf_web_server'></a>Use a mobile device interface to control the media center
 Kodi comes with a web server that allows managing some of its features from
