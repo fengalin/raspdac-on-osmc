@@ -305,6 +305,7 @@ add-on screen you reached just above):
 1. Select **Configure**
 2. From **Behaviour**, move right
 3. Move down and un-select **Switch to screen saver mode while playing music**
+4. Move down and select **OK**
 
 ## <a name='ir_receiver'></a>Configure an Infrared Remote Control
 The Sabre V3 features 3 pins for an IR receiver. The case of the RaspDAC has a slot
