@@ -219,10 +219,9 @@ sudo systemctl poweroff
 Kodi uses the [XBMC LCDproc add-on](http://kodi.wiki/view/Add-on:XBMC_LCDproc)
 to show informations on a display. Obviously, the add-on relies on a
 properly configured [LCDproc](https://github.com/lcdproc/lcdproc) server.
-LCDproc supports the HD44780 compliant displays. The WINSTAR WEH001602A display
-that comes with the RaspDAC uses the HD44780 protocol. Still, I had to modify
-it in order to be able to select the font bank. For this reason, we will use
-my version.
+LCDproc supports HD44780 compliant displays such as the WINSTAR WEH001602A
+that comes with the RaspDAC. Still, I had to modify LCDProc in order to be able
+to select the font bank.
 
 LCDproc generation requires automake:
 ``` bash
@@ -307,11 +306,13 @@ The display should show "Kodi running..." and the time and date. See
 [Modify how things are displayed](#conf_display) if you want to change this
 message.
 
-If you want to discard the screen saver mode while playing music (from the LCDproc
-add-on screen you reached just above):
+I modified the default behaviour so that the OLED display doesn't switch to screen
+saver mode while playing music. This allows reading the song title and duration.
+If you want to revert to the addon's original behaviour, proceed as follows
+(from the LCDproc add-on screen you reached just above):
 1. Select **Configure**
 2. From **Behaviour**, move right
-3. Move down and un-select **Switch to screen saver mode while playing music**
+3. Move down and check **Switch to screen saver mode while playing music**
 4. Move down and select **OK**
 
 ## <a name='ir_receiver'></a>Configure an Infrared Remote Control
