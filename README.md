@@ -282,7 +282,7 @@ git clone https://github.com/fengalin/script.xbmc.lcdproc
 
 Install the files:
 ``` bash
-cp -R ~/Projects/script.xbmc.lcdproc ~/.kodi/addons
+cp -r ~/Projects/script.xbmc.lcdproc ~/.kodi/addons
 ```
 
 Restart Kodi:
