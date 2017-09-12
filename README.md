@@ -219,9 +219,10 @@ sudo systemctl poweroff
 Kodi uses the [XBMC LCDproc add-on](http://kodi.wiki/view/Add-on:XBMC_LCDproc)
 to show informations on a display. Obviously, the add-on relies on a
 properly configured [LCDproc](https://github.com/lcdproc/lcdproc) server.
-LCDproc supports the OLED HD44780 display that comes with the RaspDAC.
-LCDproc gained support for the Raspeberry Pi 3 recently, so we need to get
-a newer version (0.5.9) than the one we can get from OSMC (0.5.7-2 as of today).
+LCDproc supports the HD44780 compliant displays. The WINSTAR WEH001602A display
+that comes with the RaspDAC uses the HD44780 protocol. Still, I had to modify
+it in order to be able to select the font bank. For this reason, we will use
+my version.
 
 LCDproc generation requires automake:
 ``` bash
@@ -231,7 +232,7 @@ sudo apt-get install automake make
 Clone LCDproc:
 ``` bash
 cd ~/Projects
-git clone https://github.com/lcdproc/lcdproc
+git clone https://github.com/fengalin/lcdproc
 ```
 
 Generate LCDproc with support for HD44780 only and install it:
@@ -243,11 +244,14 @@ make
 sudo make install
 ```
 
+Note: you can also add extra charmaps by using the option `--enable-extra-charmaps`
+See the configuration file `LCDd.conf` for the charmaps that require this option.
+
 I stripped the configuration and adapted it to use the display via the GPIO.
 I also wrote a systemd unit in order to start the daemon automatically.
 Install the scripts and the systemd unit:
 ``` bash
-sudo cp -r ~/Projects/raspdac-on-osmc/lcd/* /usr/local/
+sudo cp -r ~/Projects/raspdac-on-osmc/display/* /usr/local/
 ```
 **Important**: I configured LCDd for the Sabre V3 version. If you use a V2,
 proceed as follows (otherwise you can skip to [register the service](#lcd_service)):
