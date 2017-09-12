@@ -267,6 +267,9 @@ with
 pin_D7=15
 ```
 
+Note: the configuration loads the `hd44780_euro` char map and the `Western Europe I`
+font bank. See `LCDd.conf` for other options.
+
 <a name='lcd_service'></a>Register and start the service:
 ``` bash
 sudo systemctl enable LCDd
