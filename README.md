@@ -189,8 +189,8 @@ git clone https://github.com/fengalin/raspdac-on-osmc
 
 ## <a name='power_unit'></a>Handle the Power Management Unit
 The project contains scripts and a systemd unit to handle the power management
-subsystem. This allows stopping the button from blinking when OSMC is started and handling
-soft reboot or shutdown as well as clean shutdown when the button is pressed.
+subsystem. This allows stopping the button from blinking when OSMC is started and
+handling soft reboot or poweroff as well as clean poweroff when the button is pressed.
 
 The scripts rely on the python RPi.GPIO module which can be installed using pip
 (we will also need gcc):
@@ -220,8 +220,8 @@ Kodi uses the [XBMC LCDproc add-on](http://kodi.wiki/view/Add-on:XBMC_LCDproc)
 to show informations on a display. Obviously, the add-on relies on a
 properly configured [LCDproc](https://github.com/lcdproc/lcdproc) server.
 LCDproc supports HD44780 compliant displays such as the WINSTAR WEH001602A
-that comes with the RaspDAC. Still, I had to modify LCDProc in order to be able
-to select the font bank.
+that comes with the RaspDAC. A modification was necessary in order to be able
+to select the display's font bank.
 
 LCDproc generation requires automake:
 ``` bash
@@ -252,7 +252,7 @@ Install the scripts and the systemd unit:
 ``` bash
 sudo cp -r ~/Projects/raspdac-on-osmc/display/* /usr/local/
 ```
-**Important**: I configured LCDd for the Sabre V3 version. If you use a V2,
+**Important**: LCDd is configured for the Sabre V3 version by default. If you use a V2,
 proceed as follows (otherwise you can skip to [register the service](#lcd_service)):
 ``` bash
 sudo nano /usr/local/etc/LCDd.conf
