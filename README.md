@@ -238,13 +238,10 @@ Generate LCDproc with support for HD44780 only and install it:
 ``` bash
 cd ~/Projects/lcdproc
 sh ./autogen.sh
-./configure --enable-drivers=hd44780 --disable-libusb --disable-libusb-1-0 --disable-libftdi --disable-libX11 --disable-libhid --disable-libpng --disable-freetype --disable-ethlcd
+./configure --enable-drivers=hd44780 --enable-extra-charmaps --disable-libusb --disable-libusb-1-0 --disable-libftdi --disable-libX11 --disable-libhid --disable-libpng --disable-freetype --disable-ethlcd
 make
 sudo make install
 ```
-
-Note: you can also add extra charmaps by using the option `--enable-extra-charmaps`
-See the configuration file `LCDd.conf` for the charmaps that require this option.
 
 I stripped the configuration and adapted it to use the display via the GPIO.
 I also wrote a systemd unit in order to start the daemon automatically.
