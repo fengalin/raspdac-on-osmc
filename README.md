@@ -28,7 +28,7 @@ described in [RaspDAC-Display](https://github.com/dhrone/Raspdac-Display) and
 that's the reason why I decided to write my own how-to.
 
 The Sabre V3 versions of the RaspDAC are designed to host an **IR remote control
-receiver**. See [this section](#ir_receiver) for how-to install and configure
+receiver**. See [this section](#ir_receiver) for an how-to install and configure
 [lirc](http://www.lirc.org/) and use it to control Kodi.
 
 ## Table of contents
@@ -63,8 +63,8 @@ links](#hardware_links) at the end of this document.
 
 ## <a name='prepare_sdcard'></a>Prepare the SD Card
 The download page for OSMC is [here](https://osmc.tv/download/).
-As of June 2017, there is no specific image for the Rapsberry Pi 3, so use the one
-for the Raspberry Pi 2.
+As of September 2017, there is no specific image for the Rapsberry Pi 3,
+so use the Raspberry Pi 2 / 3 version.
 
 ### Option 1: installer
 OSMC proposes a dedicated program targetting the OS from which you will install
@@ -84,7 +84,7 @@ to the latest release for Raspeberry Pi 2/3.
 cd to the directory where you downloaded the compressed image and issue the
 following command:
 ``` bash
-gunzip OSMC_TGT_rbp2_20170705.img.gz
+gunzip OSMC_TGT_rbp2_20170803.img.gz
 ```
 
 3. Prepare the SDCard: insert the SDCard in your installation host and figure
@@ -98,7 +98,7 @@ Copy the image to the SDCard. **Warning**: this will erase everything on the
 SDCard. Make sure the device matches the SDCard before proceeding with the
 following command:
 ``` bash
-sudo dd bs=4M if=OSMC_TGT_rbp2_20170705.img of=/dev/sdb
+sudo dd bs=4M if=OSMC_TGT_rbp2_20170803.img of=/dev/sdb
 ```
 
 4. Finalize the installation: eject the SDCard from the installation host and
@@ -220,8 +220,9 @@ Kodi uses the [XBMC LCDproc add-on](http://kodi.wiki/view/Add-on:XBMC_LCDproc)
 to show informations on a display. Obviously, the add-on relies on a
 properly configured [LCDproc](https://github.com/lcdproc/lcdproc) server.
 LCDproc supports HD44780 compliant displays such as the WINSTAR WEH001602A
-that comes with the RaspDAC. A modification was necessary in order to be able
-to select the display's font bank.
+that comes with the RaspDAC. Some recent modifications are necessary to use
+LCDProc to its full potential on a RaspDAC. Until these modifications make their
+way to OSMC, we will have to compile LCDProc from source.
 
 LCDproc generation requires automake:
 ``` bash
@@ -231,7 +232,7 @@ sudo apt-get install automake make
 Clone LCDproc:
 ``` bash
 cd ~/Projects
-git clone https://github.com/fengalin/lcdproc
+git clone https://github.com/lcdproc/lcdproc
 ```
 
 Generate LCDproc with support for HD44780 only and install it:
@@ -250,7 +251,7 @@ Install the scripts and the systemd unit:
 sudo cp -r ~/Projects/raspdac-on-osmc/display/* /usr/local/
 ```
 **Important**: LCDd is configured for the Sabre V3 version by default. If you use a V2,
-proceed as follows (otherwise you can skip to [register the service](#lcd_service)):
+proceed as follows (otherwise you can skip to [register the service](#display_service)):
 ``` bash
 sudo nano /usr/local/etc/LCDd.conf
 ```
@@ -266,7 +267,7 @@ pin_D7=15
 Note: the configuration loads the `hd44780_euro` char map and the `Western Europe I`
 font bank. See `LCDd.conf` for other options.
 
-<a name='lcd_service'></a>Register and start the service:
+<a name='display_service'></a>Register and start the service:
 ``` bash
 sudo systemctl enable LCDd
 sudo systemctl start LCDd
@@ -276,7 +277,7 @@ You should see a welcome message on the OLED display.
 The official Kodi LCDproc add-on is [pending a rewrite](https://github.com/herrnst/script.xbmc.lcdproc/pull/41#issuecomment-279232135).
 I made some modifications to the add-on in order to be able to discard the screen
 saver mode while playing music and I added a french translation. If you want to use
-my version proceed as follows:<br>
+my version proceed as follows (otherwise, use Kodi to download the offical version):<br>
 Clone my fork of the add-on:
 ``` bash
 cd ~/Projects
