@@ -1,33 +1,17 @@
 # RaspDAC on OSMC
 **RaspDAC on OSMC** is an how-to and a set of scripts to help people get their
-Audiophonics' RaspDAC up and running with the [Open Source Media Center](https://osmc.tv/)
-operating system.
+Audiophonics RaspDAC up and running with the [Open Source Media Center](https://osmc.tv/)
+operating system. OSMC is based on Debian and uses [Kodi](https://kodi.tv/)
+as a mediacenter and human machine interface.
 
 The [RaspDAC](https://www.youtube.com/watch?v=HsJU91o_yHw) is a high quality
 yet affordable network audio player. It is built on a Raspberry Pi 2 or 3 board,
 a Sabre ES9023 based DAC, a power management unit and an OLED display. Being an
-affordable device, you are supposed to install the OS yourself.
-
-The product page refers to a pre-configured version of RuneAudio, but the link
-was broken when I checked, so I had to start from scratch. After the OS
+affordable device, you are supposed to install the OS yourself. After the OS
 installation, you have things to configure such as choosing an overlay to use
 the DAC, and figuring out how to handle the power management unit and the display.
-@dhrone wrote a [very helpfull project](https://github.com/dhrone/Raspdac-Display)
-to describe how to install the RaspDAC on audio oriented distributions such as
-Volumio and RuneAudio. These instructions helped me understand how the RaspDAC
-could be supported.
 
-Of course I wanted to play my audio collection, but I though: it would be great
-if the device could play videos too. So, I searched for an active distribution
-that supported the Raspeberry Pi with a special on multimedia, hence OSMC. If
-the audio capabilities of Kodi were not that good, I would install mpd and find
-a way to switch between Kodi and mpd when necessary.
-
-Kodi uses LCDproc to write on a display. This is a different approach from the one
-described in [RaspDAC-Display](https://github.com/dhrone/Raspdac-Display) and
-that's the reason why I decided to write my own how-to.
-
-The Sabre V3 versions of the RaspDAC are designed to host an **IR remote control
+The Sabre V3 version of the RaspDAC is designed to host an **IR remote control
 receiver**. See [this section](#ir_receiver) for an how-to install and configure
 [lirc](http://www.lirc.org/) and use it to control Kodi.
 
