@@ -248,8 +248,8 @@ with
 pin_D7=15
 ```
 
-Note: the configuration loads the `hd44780_euro` char map and the `Western Europe I`
-font bank. See `LCDd.conf` for other options.
+Note: the configuration loads the `Western Europe I` font bank and char map.
+See `LCDd.conf` for other options.
 
 <a name='display_service'></a>Register and start the service:
 ``` bash
