@@ -333,7 +333,7 @@ Check if the Raspberry Pi receives an IR signal.
 sudo systemctl stop eventlircd
 ```
 
-2. Dump the raw device:
+2. Dump the output of the IR device:
 ``` bash
 cat /dev/lirc0
 ```
