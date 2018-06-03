@@ -25,6 +25,7 @@ receiver**. See [this section](#ir_receiver) for an how-to install and configure
 - [Tips](#tips)
   * [Modify how things are displayed](#conf_display)
   * [Use a mobile device interface to control the media center](#conf_web_server)
+  * [Prevent the OLED display from entering screen saver mode during audio playback](#oled_screen_saver)
   * [Disable Wifi and Bluetooth](#disable_wifi_bt)
 - [Links](#links)
   * [Resources used for this project](#resources)
@@ -258,10 +259,12 @@ sudo systemctl start LCDd
 ```
 You should see a welcome message on the OLED display.
 
+If you want to prevent the OLED display from entering screen saver mode during
+audio playback, check this [how-to](#oled_screen_saver).
+
 The official Kodi LCDproc add-on is [pending a rewrite](https://github.com/herrnst/script.xbmc.lcdproc/pull/41#issuecomment-279232135).
-I made some modifications to the add-on in order to be able to discard the screen
-saver mode while playing music and I added a french translation. If you want to use
-my version proceed as follows (otherwise, use Kodi to download the offical version):<br>
+I added a french translation. If you want to use my version proceed as follows
+(otherwise, use Kodi to download the offical version):<br>
 Clone my fork of the add-on:
 ``` bash
 cd ~/Projects
@@ -287,15 +290,6 @@ Activate the add-on:
 The display should show "Kodi running..." and the time and date. See
 [Modify how things are displayed](#conf_display) if you want to change this
 message.
-
-I modified the default behaviour so that the OLED display doesn't switch to screen
-saver mode while playing music. This allows reading the song title and duration.
-If you want to revert to the addon's original behaviour, proceed as follows
-(from the LCDproc add-on screen you reached just above):
-1. Select **Configure**
-2. From **Behaviour**, move right
-3. Move down and check **Switch to screen saver mode while playing music**
-4. Move down and select **OK**
 
 ## <a name='ir_receiver'></a>Configure an Infrared Remote Control
 The Sabre V3 features 3 pins for an IR receiver. The case of the RaspDAC has a slot
@@ -433,6 +427,24 @@ settings you used above.
 
 Kore hosts a copy of the metadata from your audio and video collection. You can
 browse your collection and control playlists from the mobile device.
+
+## <a name='oled_screen_saver'></a>Prevent the OLED display from entering screen saver mode during audio playback
+During audio playback, when the screen saver timeout is reached, the playing
+time is displayed with big digits. If you prefer being able to read the playing
+title as well as the total time for the track, proceed as follow:
+
+1. Install a "visualization" package and restart Kodi:
+``` bash
+sudo apt install kodi-visualization-spectrum
+sudo systemctl restart mediacenter
+```
+
+2. Activate the addon. In Kodi, got to `Add-ons -> My add-ons -> Look and feel
+-> Visualisation -> Spectrum` and click on `Enable`, then `Use`.
+
+3. Go to `Settings -> Interface -> Screensaver` and activate:
+`Use visualisation if playing audio`.
+
 
 ## <a name='disable_wifi_bt'></a>Disable Wifi and Bluetooth
 For many reasons, you might want to disable the Raspberry Pi's Wifi and Bluetooth
