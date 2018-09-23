@@ -259,37 +259,12 @@ sudo systemctl start LCDd
 ```
 You should see a welcome message on the OLED display.
 
+Install the LCDproc add-on using Kodi's add-on manager. The display should show
+"Kodi running..." and the time and date. See [Modify how things are displayed](#conf_display)
+if you want to change this message.
+
 If you want to prevent the OLED display from entering screen saver mode during
 audio playback, check this [how-to](#oled_screen_saver).
-
-The official Kodi LCDproc add-on is [pending a rewrite](https://github.com/herrnst/script.xbmc.lcdproc/pull/41#issuecomment-279232135).
-I added a french translation. If you want to use my version proceed as follows
-(otherwise, use Kodi to download the offical version):<br>
-Clone my fork of the add-on:
-``` bash
-cd ~/Projects
-git clone https://github.com/fengalin/script.xbmc.lcdproc
-```
-
-Install the files:
-``` bash
-cp -r ~/Projects/script.xbmc.lcdproc ~/.kodi/addons
-```
-
-Restart Kodi:
-``` bash
-sudo systemctl restart mediacenter
-```
-
-Activate the add-on:
-1. From Kodi's main menu, move to **Settings** -> **Add-on browser** ->
-**My add-ons** -> **Services** -> **XBMC LCDproc**
-2. Select **Activate**
-3. Un-select **Auto update**
-
-The display should show "Kodi running..." and the time and date. See
-[Modify how things are displayed](#conf_display) if you want to change this
-message.
 
 ## <a name='ir_receiver'></a>Configure an Infrared Remote Control
 The Sabre V3 features 3 pins for an IR receiver. The case of the RaspDAC has a slot
