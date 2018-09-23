@@ -1,4 +1,5 @@
 # RaspDAC on OSMC
+
 **RaspDAC on OSMC** is an how-to and a set of scripts to help people get their
 Audiophonics RaspDAC up and running with the [Open Source Media Center](https://osmc.tv/)
 operating system. OSMC is based on Debian and uses [Kodi](https://kodi.tv/)
@@ -16,25 +17,34 @@ receiver**. See [this section](#ir_receiver) for an how-to install and configure
 [lirc](http://www.lirc.org/) and use it to control Kodi.
 
 ## Table of contents
+
 - [Software installation](#soft_install)
+
   * [Prepare the SD Card](#prepare_sdcard)
   * [Configure OSMC for the Sabre DAC](#configure_osmc)
   * [Handle the Power Management Unit](#power_unit)
   * [Configure the OLED Display](#oled_display)
   * [Configure an Infrared Remote Control](#ir_receiver)
+
 - [Tips](#tips)
+
   * [Modify how things are displayed](#conf_display)
   * [Use a mobile device interface to control the media center](#conf_web_server)
   * [Prevent the OLED display from entering screen saver mode during audio playback](#oled_screen_saver)
   * [Disable Wifi and Bluetooth](#disable_wifi_bt)
+
 - [Links](#links)
+
   * [Resources used for this project](#resources)
   * [RaspDAC hardware installation](#hardware_links)
 
 ## RaspDAC running OSMC playing music
+
 ![RaspDAC running OSMC playing Inca Roads](assets/RaspDAC-running-OSMC-playing-music.jpg)
 <br/>
+
 ## RaspDAC running OSMC in energy saving mode
+
 ![RaspDAC running OSMC in screensaver mode](assets/RaspDAC-running-OSMC-in-screensaver-mode.jpg)
 
 **Note:** in no way am I affiliated to Audiophonics. I wanted to share my experience
@@ -42,16 +52,19 @@ in the hope that it would be helpfull. If you want to try this, proceed with
 caution and at your own risk.
 
 # <a name='soft_install'></a>Software installation
+
 This project is dedicated to the software installation of the RaspDAC on OSMC.
 If you're looking for instructions on how to assemble the hardware, refer to [the
 links](#hardware_links) at the end of this document.
 
 ## <a name='prepare_sdcard'></a>Prepare the SD Card
+
 The download page for OSMC is [here](https://osmc.tv/download/).
 As of September 2017, there is no specific image for the Rapsberry Pi 3,
 so use the Raspberry Pi 2 / 3 version.
 
 ### Option 1: installer
+
 OSMC proposes a dedicated program targetting the OS from which you will install
 OSMC. If you wish to follow this path, click on your installation host OS and
 follow the instructions. I never used the installer.
@@ -61,30 +74,36 @@ Jump to the [configuration section below](#configure_osmc).
 
 
 ### Option 2: manual installation
+
 I assume you use a Unix-like operating system.
 1. Download the compressed image: click the **Disk images** button and scroll down
 to the latest release for Raspeberry Pi 2/3.
 
 2. Extract the image:
-cd to the directory where you downloaded the compressed image and issue the
-following command:
-``` bash
-gunzip OSMC_TGT_rbp2_20170803.img.gz
-```
+
+  cd to the directory where you downloaded the compressed image and issue the
+  following command:
+
+  ``` bash
+  gunzip OSMC_TGT_rbp2_20170803.img.gz
+  ```
 
 3. Prepare the SDCard: insert the SDCard in your installation host and figure
 out which device it is associated to.
 If the OS auto-mounted the partitions, unmount them. E.g.:
-```bash
-unmount /dev/sdb1
-unmount /dev/sdb2
-```
-Copy the image to the SDCard. **Warning**: this will erase everything on the
-SDCard. Make sure the device matches the SDCard before proceeding with the
-following command:
-``` bash
-sudo dd bs=4M if=OSMC_TGT_rbp2_20170803.img of=/dev/sdb
-```
+
+  ```bash
+  unmount /dev/sdb1
+  unmount /dev/sdb2
+  ```
+
+  Copy the image to the SDCard. **Warning**: this will erase everything on the
+  SDCard. Make sure the device matches the SDCard before proceeding with the
+  following command:
+
+  ``` bash
+  sudo dd bs=4M if=OSMC_TGT_rbp2_20170803.img of=/dev/sdb
+  ```
 
 4. Finalize the installation: eject the SDCard from the installation host and
 insert it into the Rapsberry Pi. Connect an ethernet link and a keyboard and
@@ -96,13 +115,16 @@ SSH, accept the default option (Enabled).
 
 
 ## <a name='configure_osmc'></a>Configure OSMC for the Sabre DAC
+
 You should now have a runing OSMC with the main menu and time of the day.
 
 **Note**: don't worry about the blinking power button, we'll get to that in a
 [dedicated section](#power_unit).
 
 ### Update OSMC
+
 Before doing anything, it is a good idea to check for updates.
+
 1. From the main menu, select **My OSMC**
 2. Move up to the cloud **Updates**
 3. Move down to **Manual Controls**
@@ -111,6 +133,7 @@ Before doing anything, it is a good idea to check for updates.
 backspace key to return to the main menu.
 
 ### Configure the overlay for the Sabre DAC
+
 1. From the main menu, select **My OSMC**
 2. Move left to **Pi Config**
 3. Move down to **Hardware Support**
@@ -124,83 +147,103 @@ If your RaspDAC is linked to an amplifier, you should get notification sounds
 from Kodi when you move through the menus.
 
 ### Configure the installation host to connect to your RaspDAC
+
 First you need to figure out which IP address is used by the Raspberry Pi. There
 are multiple ways of doing this depending on your network infrastructure.
 You may try something like this:
+
 ``` bash
 arp -a
 ```
+
 In the rest of this section, I will use the IP address 192.168.0.15.
 
 **Note:** it is a good idea to assign a static address to the RaspDAC.
 
 Prepare for passwordless ssh sessions (enter 'osmc' when prompted for the password):
+
 ``` bash
 ssh-copy-id osmc@192.168.0.15
 ```
+
 Log in:
+
 ``` bash
 ssh osmc@192.168.0.15
 uname -a
 ```
 You should read someting like this:
+
 ```
 Linux raspdac 4.9.29-8-osmc #1 SMP PREEMPT Tue Jun 16 21:37:12 UTC 2017 armv7l GNU/Linux
 ```
 
 For security reasons, you should change the password:
+
 ``` bash
 sudo passwd
 ```
 
 After you log out, just issue the following command to connect to the RaspDAC
 (you won't need the password):
+
 ``` bash
 ssh osmc@192.168.0.15
 ```
 
 ### Download this project
+
 For the rest of the installation, we will use files from various git projects.
 On the RaspDAC, in an ssh session (see above), install git:
+
 ``` bash
 sudo apt-get install git-core
 ```
 
 Clone this project:
+
 ``` bash
 mkdir ~/Projects && cd ~/Projects
 git clone https://github.com/fengalin/raspdac-on-osmc
 ```
 
 ## <a name='power_unit'></a>Handle the Power Management Unit
+
 The project contains scripts and a systemd unit to handle the power management
 subsystem. This allows stopping the button from blinking when OSMC is started and
 handling soft reboot or poweroff as well as clean poweroff when the button is pressed.
 
 The scripts rely on the python RPi.GPIO module which can be installed using pip
 (we will also need gcc):
+
 ``` bash
 sudo apt-get install gcc python-dev python-pip
 sudo pip install rpi.gpio
 ```
 
 Install the scripts and the systemd unit:
+
 ``` bash
 sudo cp -r ~/Projects/raspdac-on-osmc/power/* /usr/local/
 ```
+
 Register and start the service:
+
 ``` bash
 sudo systemctl enable raspdac
 sudo systemctl start raspdac
 ```
+
 After a few seconds, the power button should stop blinking. You can now press it
 to cleanly shutdown the RaspDAC or handle the power unit from the command line
 or from Kodi's user interface. E.g. to shutdown from the command line:
+
 ``` bash
 sudo systemctl poweroff
 ```
 
 ## <a name='oled_display'></a>Configure the OLED Display
+
 Kodi uses the [XBMC LCDproc add-on](http://kodi.wiki/view/Add-on:XBMC_LCDproc)
 to show informations on a display. Obviously, the add-on relies on a
 properly configured [LCDproc](https://github.com/lcdproc/lcdproc) server.
@@ -210,17 +253,20 @@ LCDProc to its full potential on a RaspDAC. Until these modifications make their
 way to OSMC, we will have to compile LCDProc from source.
 
 LCDproc generation requires automake:
+
 ``` bash
 sudo apt-get install automake make
 ```
 
 Clone LCDproc:
+
 ``` bash
 cd ~/Projects
 git clone https://github.com/lcdproc/lcdproc
 ```
 
 Generate LCDproc with support for HD44780 only and install it:
+
 ``` bash
 cd ~/Projects/lcdproc
 sh ./autogen.sh
@@ -232,19 +278,25 @@ sudo make install
 I stripped the configuration and adapted it to use the display via the GPIO.
 I also wrote a systemd unit in order to start the daemon automatically.
 Install the scripts and the systemd unit:
+
 ``` bash
 sudo cp -r ~/Projects/raspdac-on-osmc/display/* /usr/local/
 ```
 **Important**: LCDd is configured for the Sabre V3 version by default. If you use a V2,
 proceed as follows (otherwise you can skip to [register the service](#display_service)):
+
 ``` bash
 sudo nano /usr/local/etc/LCDd.conf
 ```
+
 replace the following line:
+
 ```
 pin_D7=27
 ```
+
 with
+
 ```
 pin_D7=15
 ```
@@ -253,10 +305,12 @@ Note: the configuration loads the `Western Europe I` font bank and char map.
 See `LCDd.conf` for other options.
 
 <a name='display_service'></a>Register and start the service:
+
 ``` bash
 sudo systemctl enable LCDd
 sudo systemctl start LCDd
 ```
+
 You should see a welcome message on the OLED display.
 
 Install the LCDproc add-on using Kodi's add-on manager. The display should show
@@ -267,6 +321,7 @@ If you want to prevent the OLED display from entering screen saver mode during
 audio playback, check this [how-to](#oled_screen_saver).
 
 ## <a name='ir_receiver'></a>Configure an Infrared Remote Control
+
 The Sabre V3 features 3 pins for an IR receiver. The case of the RaspDAC has a slot
 between the power button and the display to receive the module. The shape and size
 suggests it was designed for the
@@ -276,6 +331,7 @@ I couldn't find this exact model locally, so I went with a
 hole a bit from the inside for the 4838 to fit properly.
 
 ### Configure OSMC
+
 On my device, the IR receiver data pin is connected to GPIO 26.
 
 **Note**: Prior to version 2017.06-1, OSMC didn't allow defining a GPIO pin higher
@@ -284,6 +340,7 @@ you will need to patch your installation manually. Please refer to the instructi
 in [tag 1.0.0](https://github.com/fengalin/raspdac-on-osmc/tree/1.0.0).
 
 Select the parameters for the IR receiver:
+
 1. From Kodi's main menu, go to **My OSMC** -> **Pi Config** -> **Hardware Support**
 2. Activate **Enable LIRC GPIO support**
 3. Select the following values: **gpio_out_pin**: 10, **gpio_in_pin**: 26,
@@ -292,20 +349,24 @@ Select the parameters for the IR receiver:
 Restart the Rapsberry Pi for the changes to take effect.
 
 ### Configure your remote control
+
 If your remote control works out of the box, I guess your are lucky. Otherwise,
 let's try to configure it. [Linux Infrared Remote Control](http://www.lirc.org/)
 is a subsystem and a set of tools to handle remote controls on Linux.
 
 Check if the Raspberry Pi receives an IR signal.
+
 1. Stop the LIRC server:
-``` bash
-sudo systemctl stop eventlircd
-```
+
+  ``` bash
+  sudo systemctl stop eventlircd
+  ```
 
 2. Dump the output of the IR device:
-``` bash
-cat /dev/lirc0
-```
+
+  ``` bash
+  cat /dev/lirc0
+  ```
 
 Now, press a few keys on the remote control. If you can see gibberish, it's
 actually a good sign. If the command doesn't print anything, you might have an
@@ -316,15 +377,18 @@ your remote. If you can find it, download the matching lircd.conf file and go
 to [the following section](#ir_keys)
 
 #### Generate a lircd conf
+
 If you can't find your remote in the database, you'll have to generate the
 configuration file.
 
 First, get the list of the valid key names with the following command:
+
 ``` bash
 irrecord -l
 ```
 
 Then, use this command to generate a configuration file and follow the instructions:
+
 ``` bash
 irrecord -d /dev/lirc0 /home/osmc/your_lircd.conf
 ```
@@ -334,16 +398,19 @@ section for usefull keys. Using this method, I had a bouncing effect when I pres
 the keys. From what I read, sorting this issue out depends a lot on the remote control
 itself. I ended up finding my remote control in the database. As an example,
 these were the lines that made the difference:
+
 ```
   min_code_repeat 1
   min_repeat      2
 ```
 
 #### <a name='ir_keys'></a>Assign names to keys to control Kodi
+
 In order to ease the integration with Kodi, it is a good idea to choose key
 names that will produce the expected result out of the box.
 
 Here are the ones I used and which allow controlling Kodi to a large extent:
+
 - KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN
 - KEY_OK, KEY_BACK, KEY_HOME
 - KEY_CLOSE, KEY_POWER
@@ -352,13 +419,16 @@ Here are the ones I used and which allow controlling Kodi to a large extent:
 - KEY_PREVIOUS, KEY_NEXT, KEY_STOP, KEY_PLAYPAUSE, KEY_FASTFORWARD, KEY_REWIND
 
 Edit your_lircd.conf file to use these names. Then set it as the default configuration:
+
 ``` bash
 sudo rm /etc/lirc/lircd.conf
 sudo cp your_lircd.conf /etc/lirc/lircd.conf
 ```
+
 (or use a symbolic link if you prefer)
 
 Restart LIRC and Kodi:
+
 ``` bash
 sudo systemctl restart eventlircd
 sudo systemctl restart mediacenter
@@ -368,26 +438,33 @@ Use the remote to navigate in Kodi's UI. If it doesn't work, I'm afraid, you'll
 have to dig a little more into [LIRC's documentation](http://www.lirc.org/html/index.html).
 
 # <a name='tips'></a>Tips
+
 ## <a name='conf_display'></a>Modify how things are displayed
+
 The LCDProc addon stores a definition of the screens to display depending on the
 context in the following file:
+
 ``` bash
 nano ~/.kodi/userdata/LCD.xml
 ```
 
 If you want the display to scroll long lines slower or faster, you can adjust
 the **FrameInterval** in the LCDd configuration file:
+
 ``` bash
 sudo nano /usr/local/etc/LCDd.conf
 ```
+
 There are other parameters like the strings **Hello** and **GoodBye**
 which define what to display when the server starts and stops.
 
 ## <a name='conf_web_server'></a>Use a mobile device interface to control the media center
+
 Kodi comes with a web server that allows managing some of its features from
 a browser or a dedicated mobile device application: **Kore**.
 
 These are the steps to configure the web server:
+
 1. From Kodi's main menu, move to **Settings** -> **Services** ->
 **Control**
 2. Enter a **user name** and **password**
@@ -404,15 +481,17 @@ Kore hosts a copy of the metadata from your audio and video collection. You can
 browse your collection and control playlists from the mobile device.
 
 ## <a name='oled_screen_saver'></a>Prevent the OLED display from entering screen saver mode during audio playback
+
 During audio playback, when the screen saver timeout is reached, the playing
 time is displayed with big digits. If you prefer being able to read the playing
 title as well as the total time for the track, proceed as follow:
 
 1. Install a "visualization" package and restart Kodi:
-``` bash
-sudo apt install kodi-visualization-spectrum
-sudo systemctl restart mediacenter
-```
+
+  ``` bash
+  sudo apt install kodi-visualization-spectrum
+  sudo systemctl restart mediacenter
+  ```
 
 2. Activate the addon. In Kodi, got to `Add-ons -> My add-ons -> Look and feel
 -> Visualisation -> Spectrum` and click on `Enable`, then `Use`.
@@ -422,55 +501,69 @@ sudo systemctl restart mediacenter
 
 
 ## <a name='disable_wifi_bt'></a>Disable Wifi and Bluetooth
+
 For many reasons, you might want to disable the Raspberry Pi's Wifi and Bluetooth
 interfaces. I couldn't find a definitive minimalistic procedure, so here is a set
 of measures which I believe prevents the Pi from using these interfaces.
 
 1. Deactivate and mask the services:
-``` bash
-sudo systemctl disable wpa_supplicant && sudo systemctl mask wpa_supplicant
-sudo systemctl disable bluetooth && sudo systemctl mask bluetooth
-sudo systemctl disable brcm43xx && sudo systemctl mask brcm43xx
-```
+
+  ``` bash
+  sudo systemctl disable wpa_supplicant && sudo systemctl mask wpa_supplicant
+  sudo systemctl disable bluetooth && sudo systemctl mask bluetooth
+  sudo systemctl disable brcm43xx && sudo systemctl mask brcm43xx
+  ```
 
 2. Blacklist the kernel modules:
-``` bash
-sudo nano /etc/modprobe.d/raspi-blacklist.conf
-```
-Add these lines:
-```
-blacklist brcmfmac
-blacklist brcmutil
-blacklist btbcm
-blacklist hci_uart
-```
+
+  ``` bash
+  sudo nano /etc/modprobe.d/raspi-blacklist.conf
+  ```
+
+  Add these lines:
+
+  ```
+  blacklist brcmfmac
+  blacklist brcmutil
+  blacklist btbcm
+  blacklist hci_uart
+  ```
 
 3. Disable the interfaces:
-``` bash
-sudo nano /boot/config.txt
-```
-Add these lines:
-```
-dtoverlay=pi3-disable-wifi
-dtoveraly=pi3-disable-bt
-```
+
+  ``` bash
+  sudo nano /boot/config.txt
+  ```
+
+  Add these lines:
+
+  ```
+  dtoverlay=pi3-disable-wifi
+  dtoveraly=pi3-disable-bt
+  ```
 
 4. Reboot:
-``` bash
-sudo systemctl reboot
-```
+
+  ``` bash
+  sudo systemctl reboot
+  ```
 
 # <a name='links'></a>Links
+
 ## <a name='resources'></a>Resources used for this project
+
 ### Scripts for the RaspDAC on audio oriented distributions
+
 [RaspDAC-Display](https://github.com/dhrone/Raspdac-Display) was the main source
 for this project.
 
 ### Raspberry Pi GPIO Handling
+
 I choosed to use the [RPi.GIO module](https://sourceforge.net/p/raspberry-gpio-python/wiki/Examples/)
 as it was flexible, yet easy to use and it supported passive listening to GPIO.
 
 ### Distinguish between reboot and power off
+
 The [shutdown script](power/sbin/raspdac-shutdown.py) uses the strategy described
 [here](https://stackoverflow.com/questions/25166085/how-can-a-systemd-controlled-service-distinguish-between-shutdown-and-reboot)
 to determine if the running shutdown operation is a reboot or a power off.
@@ -479,13 +572,17 @@ In order to implement it in pure python, I used the [DBUS interface for
 systemd](https://www.freedesktop.org/wiki/Software/systemd/dbus/).
 
 ### HD44780 display using LCDproc
+
 [This how-to](http://www.rototron.info/lcdproc-tutorial-for-raspberry-pi/) showed
 me the way. However, the project is now hosted on [github](https://github.com/lcdproc/lcdproc).
 
 ### Disabling Wifi and Bluetooth
+
 The measures I propose come from [this thread](http://raspberrypi.stackexchange.com/questions/43720/disable-wifi-wlan0-on-pi-3).
 
 ## <a name='hardware_links'></a>RaspDAC hardware installation
+
 ### Sabre V3 connections
+
 The [Sabre V3 product page](http://www.audiophonics.fr/fr/dac-diy/audiophonics-i-sabre-dac-es9023-v3-tcxo-raspberry-pi-20-a-b-i2s-p-10657.html)
 shows the display and IR pins for the different versions of the Sabre v3.
