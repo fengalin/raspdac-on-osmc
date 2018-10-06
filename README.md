@@ -217,7 +217,7 @@ The scripts rely on the python RPi.GPIO module which can be installed using pip
 (we will also need gcc):
 
 ``` bash
-sudo apt-get install gcc python-dev python-pip
+sudo apt-get install gcc python-dev python-pip python-setuptools
 sudo pip install rpi.gpio
 ```
 
