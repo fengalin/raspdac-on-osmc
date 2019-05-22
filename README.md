@@ -153,7 +153,7 @@ are multiple ways of doing this depending on your network infrastructure.
 You may try something like this:
 
 ``` bash
-arp -a
+sudo nmap -sP 192.168.0.0/24
 ```
 
 In the rest of this section, I will use the IP address 192.168.0.15.
