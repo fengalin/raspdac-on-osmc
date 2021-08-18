@@ -19,22 +19,17 @@ receiver**. See [this section](#ir_receiver) for an how-to install and configure
 ## Table of contents
 
 - [Software installation](#soft_install)
-
   * [Prepare the SD Card](#prepare_sdcard)
   * [Configure OSMC for the Sabre DAC](#configure_osmc)
   * [Handle the Power Management Unit](#power_unit)
   * [Configure the OLED Display](#oled_display)
   * [Configure an Infrared Remote Control](#ir_receiver)
-
 - [Tips](#tips)
-
   * [Modify how things are displayed](#conf_display)
   * [Use a mobile device interface to control the media center](#conf_web_server)
   * [Prevent the OLED display from entering screen saver mode during audio playback](#oled_screen_saver)
   * [Disable Wifi and Bluetooth](#disable_wifi_bt)
-
 - [Links](#links)
-
   * [Resources used for this project](#resources)
   * [RaspDAC hardware installation](#hardware_links)
 
@@ -60,7 +55,7 @@ links](#hardware_links) at the end of this document.
 ## <a name='prepare_sdcard'></a>Prepare the SD Card
 
 The download page for OSMC is [here](https://osmc.tv/download/).
-As of September 2017, there is no specific image for the Rapsberry Pi 3,
+As of August 2021, there is no specific image for the Rapsberry Pi 3,
 so use the Raspberry Pi 2 / 3 version.
 
 ### Option 1: installer
@@ -76,21 +71,19 @@ Jump to the [configuration section below](#configure_osmc).
 ### Option 2: manual installation
 
 I assume you use a Unix-like operating system.
-1. Download the compressed image: click the **Disk images** button and scroll down
-to the latest release for Raspeberry Pi 2/3.
 
+1. Download the compressed image: click the `Disk images` button and scroll down
+   to the latest release for Raspeberry Pi 2/3.
 2. Extract the image:
-
   cd to the directory where you downloaded the compressed image and issue the
   following command:
 
   ``` bash
-  gunzip OSMC_TGT_rbp2_20170803.img.gz
+  gunzip OSMC_TGT_rbp2_20210808.img.gz
   ```
-
 3. Prepare the SDCard: insert the SDCard in your installation host and figure
-out which device it is associated to.
-If the OS auto-mounted the partitions, unmount them. E.g.:
+   out which device it is associated to.
+   If the OS auto-mounted the partitions, unmount them. E.g.:
 
   ```bash
   unmount /dev/sdb1
@@ -102,12 +95,11 @@ If the OS auto-mounted the partitions, unmount them. E.g.:
   following command:
 
   ``` bash
-  sudo dd bs=4M if=OSMC_TGT_rbp2_20170803.img of=/dev/sdb
+  sudo dd bs=4M if=OSMC_TGT_rbp2_20210808.img of=/dev/sdb
   ```
-
 4. Finalize the installation: eject the SDCard from the installation host and
-insert it into the Rapsberry Pi. Connect an ethernet link and a keyboard and
-start the Pi.
+   insert it into the Rapsberry Pi. Connect an ethernet link and a keyboard and
+   start the Pi.
 
 OSMC will format and install the filesystem. When it's done, it will reboot.
 Follow the instructions. Choose a name for your media center. When prompted for
@@ -118,33 +110,38 @@ SSH, accept the default option (Enabled).
 
 You should now have a runing OSMC with the main menu and time of the day.
 
-**Note**: don't worry about the blinking power button, we'll get to that in a
-[dedicated section](#power_unit).
+**Note**: don't worry about the blinking power button, we'll get to that in
+[this section](#power_unit).
 
 ### Update OSMC
 
 Before doing anything, it is a good idea to check for updates.
 
-1. From the main menu, select **My OSMC**
-2. Move up to the cloud **Updates**
-3. Move down to **Manual Controls**
-4. Move right to **Scan for updates now** and press the enter key.
+1. From the main menu, select `My OSMC`
+2. Move up to the cloud `Updates`
+3. Move down to `Manual Controls`
+4. Move right to `Scan for updates now` and press the enter key.
 5. Wait until the scan is done. Reboot if needed, otherwise you can press the
-backspace key to return to the main menu.
+   backspace key to return to the main menu.
 
 ### Configure the overlay for the Sabre DAC
 
-1. From the main menu, select **My OSMC**
-2. Move left to **Pi Config**
-3. Move down to **Hardware Support**
-4. Move right and change **Soundcard Overlay** to **hifiberry-dac-overlay**
-5. Move down and select **OK**
+1. From the main menu, select `My OSMC`
+2. Move left to `Pi Config`
+3. Move down to `Hardware Support`
+4. Move right and change `Soundcard Overlay` to `hifiberry-dac-overlay`
+5. Move down and select `OK`
 6. Press the backspace key to return to the main menu.
-7. Move down to **Power**
-8. Move down to **Reboot** and press the enter key.
+7. Move down to `Power`
+8. Move down to `Reboot` and press the enter key.
 
 If your RaspDAC is linked to an amplifier, you should get notification sounds
 from Kodi when you move through the menus.
+
+**Note**: in the August 8th 2021 OSMC release there seems to be a bug. You will
+have to edit the file `config-user.txt` and rename `hifiberry-dac-overlay` to
+`hifiberry-dac`. Either mount the SDCard on another device and edit the file or
+use the edit interface in `My OSMC -> Pi Config -> Hardware Support`.
 
 ### Configure the installation host to connect to your RaspDAC
 
@@ -175,13 +172,13 @@ uname -a
 You should read someting like this:
 
 ```
-Linux raspdac 4.9.29-8-osmc #1 SMP PREEMPT Tue Jun 16 21:37:12 UTC 2017 armv7l GNU/Linux
+Linux raspdac 5.10.32-2-osmc #1 SMP PREEMPT Mon Aug 2 04:28:32 UTC 2021 armv7l GNU/Linux
 ```
 
 For security reasons, you should change the password:
 
 ``` bash
-sudo passwd
+passwd
 ```
 
 After you log out, just issue the following command to connect to the RaspDAC
@@ -197,7 +194,7 @@ For the rest of the installation, we will use files from various git projects.
 On the RaspDAC, in an ssh session (see above), install git:
 
 ``` bash
-sudo apt-get install git-core
+sudo apt-get update && sudo apt-get install git
 ```
 
 Clone this project:
@@ -217,8 +214,8 @@ The scripts rely on the python RPi.GPIO module which can be installed using pip
 (we will also need gcc):
 
 ``` bash
-sudo apt-get install gcc python-dev python-pip python-setuptools
-sudo pip install rpi.gpio
+sudo apt-get install gcc python-dev python-pip python-setuptools pydbus
+sudo pip install wheel rpi.gpio
 ```
 
 Install the scripts and the systemd unit:
@@ -334,17 +331,10 @@ hole a bit from the inside for the 4838 to fit properly.
 
 On my device, the IR receiver data pin is connected to GPIO 26.
 
-**Note**: Prior to version 2017.06-1, OSMC didn't allow defining a GPIO pin higher
-than 25 for an IR receiver. If you want to install a version earlier than 2017.06-1,
-you will need to patch your installation manually. Please refer to the instructions
-in [tag 1.0.0](https://github.com/fengalin/raspdac-on-osmc/tree/1.0.0).
-
 Select the parameters for the IR receiver:
 
-1. From Kodi's main menu, go to **My OSMC** -> **Pi Config** -> **Hardware Support**
-2. Activate **Enable LIRC GPIO support**
-3. Select the following values: **gpio_out_pin**: 10, **gpio_in_pin**: 26,
-**gpio_in_pull**: down
+1. From Kodi's main menu, go to `My OSMC -> Pi Config -> Hardware Support`
+2. Update `gpio_pin` to `26`.
 
 Restart the Rapsberry Pi for the changes to take effect.
 
@@ -361,7 +351,6 @@ Check if the Raspberry Pi receives an IR signal.
   ``` bash
   sudo systemctl stop eventlircd
   ```
-
 2. Dump the output of the IR device:
 
   ``` bash
@@ -449,26 +438,25 @@ nano ~/.kodi/userdata/LCD.xml
 ```
 
 If you want the display to scroll long lines slower or faster, you can adjust
-the **FrameInterval** in the LCDd configuration file:
+the `FrameInterval` in the LCDd configuration file:
 
 ``` bash
 sudo nano /usr/local/etc/LCDd.conf
 ```
 
-There are other parameters like the strings **Hello** and **GoodBye**
+There are other parameters like the strings `Hello` and `GoodBye`
 which define what to display when the server starts and stops.
 
 ## <a name='conf_web_server'></a>Use a mobile device interface to control the media center
 
 Kodi comes with a web server that allows managing some of its features from
-a browser or a dedicated mobile device application: **Kore**.
+a browser or a dedicated mobile device application: `Kore`.
 
 These are the steps to configure the web server:
 
-1. From Kodi's main menu, move to **Settings** -> **Services** ->
-**Control**
-2. Enter a **user name** and **password**
-3. Allow **remote control**...
+1. From Kodi's main menu, move to `Settings -> Services -> Control`
+2. Enter a `user name` and `password`
+3. Allow `remote control`...
 
 Check that the web server is runing: open a browser and connect to this URL:
 http://192.168.0.15:8080/ (replace '192.168.0.15' with the IP of your RaspDAC).
@@ -486,18 +474,10 @@ During audio playback, when the screen saver timeout is reached, the playing
 time is displayed with big digits. If you prefer being able to read the playing
 title as well as the total time for the track, proceed as follow:
 
-1. Install a "visualization" package and restart Kodi:
-
-  ``` bash
-  sudo apt install kodi-visualization-spectrum
-  sudo systemctl restart mediacenter
-  ```
-
-2. Activate the addon. In Kodi, got to `Add-ons -> My add-ons -> Look and feel
--> Visualisation -> Spectrum` and click on `Enable`, then `Use`.
-
-3. Go to `Settings -> Interface -> Screensaver` and activate:
-`Use visualisation if playing audio`.
+1. Activate the addon `shadertoy`. In Kodi, got to `Add-ons -> My add-ons -> Look and feel
+   -> Visualisation -> shadertoy` and click on `Enable`, then `Use`.
+2. Go to `Settings -> Interface -> Screensaver` and activate:
+   `Use visualisation if playing audio`.
 
 
 ## <a name='disable_wifi_bt'></a>Disable Wifi and Bluetooth
@@ -507,43 +487,32 @@ interfaces. I couldn't find a definitive minimalistic procedure, so here is a se
 of measures which I believe prevents the Pi from using these interfaces.
 
 1. Deactivate and mask the services:
-
   ``` bash
   sudo systemctl disable wpa_supplicant && sudo systemctl mask wpa_supplicant
   sudo systemctl disable bluetooth && sudo systemctl mask bluetooth
   sudo systemctl disable brcm43xx && sudo systemctl mask brcm43xx
   ```
-
 2. Blacklist the kernel modules:
-
   ``` bash
   sudo nano /etc/modprobe.d/raspi-blacklist.conf
   ```
-
   Add these lines:
-
   ```
   blacklist brcmfmac
   blacklist brcmutil
   blacklist btbcm
   blacklist hci_uart
   ```
-
 3. Disable the interfaces:
-
   ``` bash
   sudo nano /boot/config.txt
   ```
-
   Add these lines:
-
   ```
   dtoverlay=pi3-disable-wifi
   dtoveraly=pi3-disable-bt
   ```
-
 4. Reboot:
-
   ``` bash
   sudo systemctl reboot
   ```

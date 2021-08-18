@@ -2,12 +2,11 @@
 
 from time import sleep
 import RPi.GPIO as GPIO
-import dbus, sys
+import pydbus, sys
 
 # get active jobs to determine if we are shutting down or rebooting
-systemd1 = dbus.SystemBus().get_object('org.freedesktop.systemd1', '/org/freedesktop/systemd1')
-manager = dbus.Interface(systemd1, 'org.freedesktop.systemd1.Manager')
-job_list = manager.ListJobs()
+systemd1 = pydbus.SystemBus().get('org.freedesktop.systemd1', '/org/freedesktop/systemd1')
+job_list = systemd1.ListJobs()
 
 is_shutting_down = False
 is_rebooting = False
