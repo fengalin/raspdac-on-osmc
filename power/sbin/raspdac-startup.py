@@ -18,7 +18,7 @@ try:
     channel = GPIO.wait_for_edge(17, GPIO.RISING) # , timeout=5000
     if channel is not None:
         print("Raspdac: Button triggered")
-	GPIO.output(22, GPIO.LOW)
+	    GPIO.output(22, GPIO.LOW)
 
         subprocess.call(["sudo", "systemctl", "poweroff"])
     else:
