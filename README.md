@@ -214,7 +214,7 @@ The scripts rely on the python RPi.GPIO module which can be installed using pip
 (we will also need gcc):
 
 ``` bash
-sudo apt-get install gcc python-dev python-pip python-setuptools pydbus
+sudo apt-get install gcc python3-dev python3-pip python-setuptools python3-pydbus
 sudo pip install wheel rpi.gpio
 ```
 
