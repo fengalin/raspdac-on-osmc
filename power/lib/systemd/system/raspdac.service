@@ -1,6 +1,7 @@
 [Unit]
 Description=Raspdac Sartup Service
-After=dbus.socket
+Requires=dbus.service
+After=dbus.service
 
 [Service]
 ExecStart=/usr/bin/python -u /usr/local/sbin/raspdac-startup.py
